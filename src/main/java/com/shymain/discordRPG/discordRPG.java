@@ -83,6 +83,7 @@ public class DiscordRPG {
 			w.write("{\"floors\":{}}");
 			w.flush();
 			w.close();
+			Floor.initialize();
 		}
 		File i = new File(System.getProperty("user.home")+"/discordRPG/monsters.json");
 		if(!i.exists())
@@ -92,8 +93,8 @@ public class DiscordRPG {
 			w.write("{\"monsters\":{}}");
 			w.flush();
 			w.close();
+			Monster.initialize();
 		}
-		Monster.initialize();
 		}
 	}
 	

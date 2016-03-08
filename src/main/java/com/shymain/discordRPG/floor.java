@@ -9,12 +9,11 @@ import org.json.JSONObject;
 
 public class Floor {
 	
-	public static String file = System.getProperty("home") + "/discordRPG/floors.json";
+	public static String file = System.getProperty("user.home") + "/discordRPG/floors.json";
 	
 	public static void initialize() throws JSONException, IOException
 	{
-		String template = "\"1\":"
-			+"{"
+		String template = "{"
 			+ "\"shop\":"
 			+ "{"
             + "\"health_potion\":10,"

@@ -1,23 +1,40 @@
 package com.shymain.discordRPG;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import sx.blah.discord.api.DiscordException;
+import sx.blah.discord.api.MissingPermissionsException;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
+import sx.blah.discord.util.HTTP429Exception;
 
 public class Store {
 
-	public static void displayWares(MessageReceivedEvent event) throws JSONException, IOException
+	public static void displayWares(MessageReceivedEvent event) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
 	{
 		JSONObject json = new JSONObject(DiscordRPG.readFile(Player.file));
-		int floor = json.getJSONObject("players").getJSONObject(event.getMessage().getAuthor().getID()).getInt("floor");
-		switch(floor)
+		JSONObject json2 = new JSONObject(DiscordRPG.readFile(Floor.file));
+		int number = json.getJSONObject("players").getJSONObject(event.getMessage().getAuthor().getID()).getInt("floor");
+		JSONObject floor = json2.getJSONObject("floors").getJSONObject(Integer.toString(number));
+		Iterator<String> keys = floor.getJSONObject("shop").keys();
+		String output = "```\nAvailable Items:\n";
+		while(keys.hasNext())
 		{
-		case 1:
-			//event.getMessage().getChannel().sendMessage("");
+			String key = (String)keys.next();
+			int cost = floor.getJSONObject("shop").getInt(key);
+			String costs = Integer.toString(cost);
+			output += key + ": Costs " + costs + " gold.\n";
 		}
+		output += "```";
+		event.getMessage().getChannel().sendMessage(output);
+	}
+	
+	public static void buyItem(MessageReceivedEvent event, String item) throws JSONException, IOException
+	{
+		Player.inventoryRemove(event.getMessage().getAuthor(), item, 1);
 	}
 	
 }
