@@ -15,15 +15,11 @@ public class Tick extends TimerTask{
 
 	public void run()
 	{
-		System.out.println("running.");
 		Iterator<Map.Entry<Event,Integer>> iter = DiscordRPG.timedEvents.entrySet().iterator();
-		System.out.println(iter.hasNext());
 		while (iter.hasNext()) {
 		    Map.Entry<Event,Integer> entry = iter.next();
 		    int temp = entry.getValue();
 		    temp--;
-		    System.out.println(temp);
-		    System.out.println(entry.getKey().user.getName());
 		    if(temp==0)
 		    {
 		    	try {

@@ -46,7 +46,6 @@ public class Monster {
 		r.close();
 	}
 	
-	
 	public static void startFight(MessageReceivedEvent event) throws MissingPermissionsException, HTTP429Exception, DiscordException, JSONException, IOException
 	{
 		JSONObject json = new JSONObject(DiscordRPG.readFile(Player.file));
@@ -91,11 +90,12 @@ public class Monster {
 		int dropNumber = 0;
 		JSONObject monster = object.getJSONObject("monsters").getJSONObject(name);
 		Random r = new Random();
-		int k = r.nextInt(monster.getJSONObject("loottables").names().length());
+		int k = r.nextInt(monster.getJSONObject("loottables").names().length()-1);
 		dropType = monster.getJSONObject("loottables").names().getString(k);
 		dropNumber = monster.getJSONObject("loottables").getInt(dropType);
 		channel.sendMessage(user.mention() + " has defeated the " + name + "!\n"
 				+ "It drops: "+ dropNumber +"x "+dropType+"!");
+		Player.inventoryAdd(user, dropType, dropNumber);
 		DiscordRPG.timedEvents.remove(DiscordRPG.eventStorage.get(user));
 		DiscordRPG.eventStorage.remove(user);
 		currentFights.remove(user);
