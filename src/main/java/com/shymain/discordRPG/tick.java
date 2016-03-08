@@ -11,15 +11,15 @@ import sx.blah.discord.api.DiscordException;
 import sx.blah.discord.api.MissingPermissionsException;
 import sx.blah.discord.util.HTTP429Exception;
 
-public class tick extends TimerTask{
+public class Tick extends TimerTask{
 
 	public void run()
 	{
 		System.out.println("running.");
-		Iterator<Map.Entry<event,Integer>> iter = discordRPG.timedEvents.entrySet().iterator();
+		Iterator<Map.Entry<Event,Integer>> iter = DiscordRPG.timedEvents.entrySet().iterator();
 		System.out.println(iter.hasNext());
 		while (iter.hasNext()) {
-		    Map.Entry<event,Integer> entry = iter.next();
+		    Map.Entry<Event,Integer> entry = iter.next();
 		    int temp = entry.getValue();
 		    temp--;
 		    System.out.println(temp);
@@ -28,7 +28,7 @@ public class tick extends TimerTask{
 		    {
 		    	try {
 		    		iter.remove();
-					discordRPG.eventDistributer(entry.getKey().eventType, entry.getKey().user, entry.getKey().channel);
+					DiscordRPG.eventDistributer(entry.getKey().eventType, entry.getKey().user, entry.getKey().channel);
 				} catch (JSONException | IOException | MissingPermissionsException | HTTP429Exception
 						| DiscordException e) {
 					e.printStackTrace();

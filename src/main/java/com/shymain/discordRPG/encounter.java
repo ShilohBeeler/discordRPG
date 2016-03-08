@@ -1,6 +1,6 @@
 package com.shymain.discordRPG;
 
-public class encounter {
+public class Encounter {
 	
 	public String name;
 	public int health;
@@ -8,7 +8,7 @@ public class encounter {
 	public int attack;
 	public int speed;
 	
-	public encounter(String name, int health, int maxhealth, int attack, int speed)
+	public Encounter(String name, int health, int maxhealth, int attack, int speed)
 	{
 		this.name = name;
 		this.health = health;

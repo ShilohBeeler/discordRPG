@@ -19,18 +19,19 @@ import sx.blah.discord.api.MissingPermissionsException;
 import sx.blah.discord.handle.EventDispatcher;
 import sx.blah.discord.handle.EventSubscriber;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
+import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.impl.events.UserJoinEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.HTTP429Exception;
 
-public class discordRPG {
+public class DiscordRPG {
 	
 	public static boolean ok = false;
-	public static ConcurrentHashMap<event, Integer> timedEvents = new ConcurrentHashMap<event, Integer>();
+	public static ConcurrentHashMap<Event, Integer> timedEvents = new ConcurrentHashMap<Event, Integer>();
 	public static Timer timer = new Timer();
-	public static tick ticker = new tick();
-	public static HashMap<IUser, event> eventStorage = new HashMap<IUser, event>();
+	public static Tick ticker = new Tick();
+	public static HashMap<IUser, Event> eventStorage = new HashMap<IUser, Event>();
 
 	
 	public static IDiscordClient getClient(String email, String password, boolean login) throws DiscordException { //Returns an instance of the discord client
@@ -47,19 +48,18 @@ public class discordRPG {
 	{
 		if(eventType.equalsIgnoreCase("defend"))
 		{
-			monster.defend(user, channel);
+			Monster.defend(user, channel);
 		}
 	}
 	
 	@EventSubscriber
-	public void firstMessage(MessageReceivedEvent event) throws MissingPermissionsException, HTTP429Exception, DiscordException, IOException
+	public void firstMessage(ReadyEvent event) throws MissingPermissionsException, HTTP429Exception, DiscordException, IOException
 	{
 		if(ok==false){
 			ok = true;
 			String blank = "Testing";
 		    Optional<String> game = Optional.<String>of(blank);
 		    event.getClient().updatePresence(false, game);
-		    event.getMessage().getChannel().sendMessage("I unsheathe my sword, ready to begin questing.");
 		
 		File f = new File(System.getProperty("user.home")+"/discordRPG");
 		if(!f.exists())
@@ -71,7 +71,7 @@ public class discordRPG {
 		{
 			g.createNewFile();
 			FileWriter w = new FileWriter(System.getProperty("user.home")+"/discordRPG/players.json");
-			w.write("{\"players\":[]}");
+			w.write("{\"players\":{}}");
 			w.flush();
 			w.close();
 		}
@@ -80,7 +80,7 @@ public class discordRPG {
 		{
 			h.createNewFile();
 			FileWriter w = new FileWriter(System.getProperty("user.home")+"/discordRPG/floors.json");
-			w.write("{\"floors\":[]}");
+			w.write("{\"floors\":{}}");
 			w.flush();
 			w.close();
 		}
@@ -89,11 +89,11 @@ public class discordRPG {
 		{
 			i.createNewFile();
 			FileWriter w = new FileWriter(System.getProperty("user.home")+"/discordRPG/monsters.json");
-			w.write("{\"monsters\":[]}");
+			w.write("{\"monsters\":{}}");
 			w.flush();
 			w.close();
 		}
-		monster.initialize();
+		Monster.initialize();
 		}
 	}
 	
@@ -113,11 +113,7 @@ public class discordRPG {
 			allArguments = parts[1];
 			arguments = allArguments.split(" ");
 		}
-		if(eventStorage.containsKey(event.getMessage().getAuthor()))
-		{
-		input.commands(event);
-		}
-		
+		Input.commands(event);
 		/*testMessages:
 		if(command.equalsIgnoreCase("levelup"))
 		{
@@ -160,14 +156,14 @@ public class discordRPG {
 	@EventSubscriber
 	public static void userJoins(UserJoinEvent event) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
 	{
-		player.create(event);
+		Player.create(event);
 		event.getGuild().getChannels().get(0).sendMessage("A new traveler arrives, sword in hand.");
 	}
 	
 	public static void main(String[] args) throws DiscordException, JSONException, IOException{
-		IDiscordClient client = discordRPG.getClient("discordrpg@gmail.com", Password.getPass(), true);
+		IDiscordClient client = DiscordRPG.getClient("discordrpg@gmail.com", Password.getPass(), true);
 		EventDispatcher dispatcher = client.getDispatcher();
-	    dispatcher.registerListener(new discordRPG());
+	    dispatcher.registerListener(new DiscordRPG());
 	    timer.schedule(ticker, 0, 1000);
 	}
 

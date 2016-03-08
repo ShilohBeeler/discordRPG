@@ -18,7 +18,6 @@ public class Player {
 	public static void create(UserJoinEvent event) throws JSONException, IOException
 	{
 		String template = "{"
-           + "player: \""+event.getUser().getID()+"\","
            + "stats:" 
            + "{"
            +     "mining: 1,"
@@ -41,116 +40,89 @@ public class Player {
            + "health: 10,"
            + "maxhealth: 10"
            +"}";
-		JSONObject json = new JSONObject(discordRPG.readFile(file));
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
 		JSONObject player = new JSONObject(template);
-		json.getJSONArray("players").put(player);
+		json.getJSONObject("players").put(event.getUser().getID(), player);
 		FileWriter r = new FileWriter(file);
-		r.write(json.toString());
+		r.write(json.toString(3));
 		r.flush();
 		r.close();
 	}
 	
 	public static String statsUp(IUser user, String stat) throws JSONException, IOException{
-		JSONObject json = new JSONObject(discordRPG.readFile(file));
-		statsUp:
-		for(int i = 0; i<json.getJSONArray("players").length(); i++)
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		JSONObject player = json.getJSONObject("players").getJSONObject(user.getID());
+		if(!player.getJSONObject("stats").has(stat))
 		{
-			if(json.getJSONArray("players").getJSONObject(i).getString("player").equalsIgnoreCase(user.getID()))
-				{
-				if(!json.getJSONArray("players").getJSONObject(i).getJSONObject("stats").has(stat))
-				{
-					return "StatNotFoundError";
-				}
-				json.getJSONArray("players").getJSONObject(i).getJSONObject("stats").increment(stat);
-				FileWriter r = new FileWriter(file);
-				r.write(json.toString());
-				r.flush();
-				r.close();
-				return "Success";
-				}
+			return "StatNotFoundError";
 		}
-		return "PlayerNotFoundError";
+		player.getJSONObject("stats").increment(stat);
+		FileWriter r = new FileWriter(file);
+		r.write(json.toString(3));
+		r.flush();
+		r.close();
+		return "Success";
 	}
 	
 	public static String floorUp(IUser user) throws JSONException, IOException{
-		JSONObject json = new JSONObject(discordRPG.readFile(file));
-		floorUp:
-		for(int i = 0; i<json.getJSONArray("players").length(); i++)
-		{
-			if(json.getJSONArray("players").getJSONObject(i).getString("player").equalsIgnoreCase(user.getID()))
-				{
-				json.getJSONArray("players").getJSONObject(i).increment("floor");
-				FileWriter r = new FileWriter(file);
-				r.write(json.toString());
-				r.flush();
-				r.close();
-				return "Success";
-				}
-		}
-		return "PlayerNotFoundError";
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		JSONObject player = json.getJSONObject("players").getJSONObject(user.getID());
+		player.increment("floor");
+		FileWriter r = new FileWriter(file);
+		r.write(json.toString(3));
+		r.flush();
+		r.close();
+		return "Success";
 	}
 	
 	public static String inventoryAdd(IUser user, String item, int number) throws JSONException, IOException{
-		JSONObject json = new JSONObject(discordRPG.readFile(file));
-		inventoryAdd:
-		for(int i = 0; i<json.getJSONArray("players").length(); i++)
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		JSONObject player = json.getJSONObject("players").getJSONObject(user.getID());
+		if(player.getJSONObject("inventory").has(item))
 		{
-			if(json.getJSONArray("players").getJSONObject(i).getString("player").equalsIgnoreCase(user.getID()))
-				{
-				if(json.getJSONArray("players").getJSONObject(i).getJSONObject("inventory").has(item))
-					{
-					for(int j = 0; j < number; j++)
-					{
-						json.getJSONArray("players").getJSONObject(i).getJSONObject("inventory").increment(item);
-					}
-					}else
-					{
-						json.getJSONArray("players").getJSONObject(i).getJSONObject("inventory").put(item, number);
-					}
-				FileWriter r = new FileWriter(file);
-				r.write(json.toString());
-				r.flush();
-				r.close();
-				return "Success";
-				}
+			for(int j = 0; j < number; j++)
+			{
+				player.getJSONObject("inventory").increment(item);
+			}
+		}else
+		{
+			player.getJSONObject("inventory").put(item, number);
 		}
-		return "PlayerNotFoundError";
+		FileWriter r = new FileWriter(file);
+		r.write(json.toString(3));
+		r.flush();
+		r.close();
+		return "Success";
 	}
 	
 	public static String inventoryRemove(IUser user, String item, int number) throws JSONException, IOException{
-		JSONObject json = new JSONObject(discordRPG.readFile(file));
-		inventoryRemove:
-		for(int i = 0; i<json.getJSONArray("players").length(); i++)
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		JSONObject player = json.getJSONObject("players").getJSONObject(user.getID());
+		if(player.getJSONObject("inventory").has(item))
+			{
+			int itemno = player.getJSONObject("inventory").getInt(item);
+			for(int j = 0; j < number; j++)
+			{
+				itemno--;
+			}
+			if(itemno<0)
+			{
+				return "ItemNumberError";
+			}
+			player.getJSONObject("inventory").remove(item);
+			if(itemno!=0)
+			{
+				player.getJSONObject("inventory").put(item, itemno);
+			}
+		}else
 		{
-			if(json.getJSONArray("players").getJSONObject(i).getString("player").equalsIgnoreCase(user.getID()))
-				{
-				if(json.getJSONArray("players").getJSONObject(i).getJSONObject("inventory").has(item))
-					{
-					int itemno = json.getJSONArray("players").getJSONObject(i).getJSONObject("inventory").getInt(item);
-					for(int j = 0; j < number; j++)
-					{
-						itemno--;
-					}
-					if(itemno<0)
-					{
-						return "ItemNumberError";
-					}
-						json.getJSONArray("players").getJSONObject(i).getJSONObject("inventory").remove(item);
-						if(itemno!=0){
-						json.getJSONArray("players").getJSONObject(i).getJSONObject("inventory").put(item, itemno);
-						}
-					}else
-					{
-						return "ItemNotFoundError";
-					}
-				FileWriter r = new FileWriter(file);
-				r.write(json.toString());
-				r.flush();
-				r.close();
-				return "Success";
-				}
+			return "ItemNotFoundError";
 		}
-		return "PlayerNotFoundError";
+		FileWriter r = new FileWriter(file);
+		r.write(json.toString(3));
+		r.flush();
+		r.close();
+		return "Success";
 	}
 	
 }

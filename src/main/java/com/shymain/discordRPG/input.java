@@ -10,7 +10,7 @@ import sx.blah.discord.handle.EventSubscriber;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
 import sx.blah.discord.util.HTTP429Exception;
 
-public class input {
+public class Input {
 
 	@EventSubscriber
 	public static void commands(MessageReceivedEvent event) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
@@ -31,12 +31,12 @@ public class input {
 		commands:
 		if(command.equalsIgnoreCase(".fight") || command.equalsIgnoreCase(".attack"))
 		{
-			if(monster.currentFights.containsKey(event.getMessage().getAuthor()))
+			if(Monster.currentFights.containsKey(event.getMessage().getAuthor()))
 			{
-				monster.attack(event.getMessage().getAuthor(), event.getMessage().getChannel());
+				Monster.attack(event.getMessage().getAuthor(), event.getMessage().getChannel());
 				break commands;
 			}else{
-				monster.startFight(event);
+				Monster.startFight(event);
 			}
 		}
 	}
