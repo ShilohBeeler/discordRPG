@@ -49,8 +49,7 @@ public class Monster {
 	public static void startFight(MessageReceivedEvent event) throws MissingPermissionsException, HTTP429Exception, DiscordException, JSONException, IOException
 	{
 		JSONObject json = new JSONObject(DiscordRPG.readFile(Player.file));
-		int floor = json.getJSONObject("players").getJSONObject(event.getMessage().getAuthor().getID()).getInt("floor");
-		Encounter newEncounter = Floor.getMonster(floor);
+		Encounter newEncounter = Floor.getMonster(event.getMessage().getChannel().getID());
 		event.getMessage().getChannel().sendMessage("You have challenged an angry " + newEncounter.name + " to a duel!");
 		currentFights.put(event.getMessage().getAuthor(), newEncounter);
 		System.out.println(currentFights.toString());

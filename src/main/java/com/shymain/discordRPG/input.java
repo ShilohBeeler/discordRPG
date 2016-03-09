@@ -86,6 +86,10 @@ public class Input {
 			}else if(command.equalsIgnoreCase(".help"))
 			{
 				event.getMessage().getChannel().sendMessage("*.join* if you are not already added to the game.");
+			}else if(command.equalsIgnoreCase(".mine"))
+			{
+				event.getMessage().getChannel().sendMessage("You swing your pick at the rock.");
+				Floor.mineRock(event.getMessage().getAuthor(), event.getMessage().getChannel());
 			}
 		}
 	}

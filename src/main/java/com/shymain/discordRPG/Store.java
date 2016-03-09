@@ -1,5 +1,6 @@
 package com.shymain.discordRPG;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
 
@@ -12,6 +13,23 @@ import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
 import sx.blah.discord.util.HTTP429Exception;
 
 public class Store {
+	
+	public static String file = System.getProperty("user.home")+"/discordRPG/shops.json";
+	
+	public static void initialize() throws JSONException, IOException
+	{
+		String template = "{"
+	            + "\"health_potion\":10,"
+	            + "\"iron_pickaxe\":100"
+	            + "}";
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		JSONObject shop = new JSONObject(template);
+		json.getJSONObject("shops").put("1", shop);
+		FileWriter r = new FileWriter(file);
+		r.write(json.toString(3));
+		r.flush();
+		r.close();
+	}
 
 	public static void displayWares(MessageReceivedEvent event) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
 	{
