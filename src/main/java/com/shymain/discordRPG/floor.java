@@ -4,11 +4,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import sx.blah.discord.api.DiscordException;
 import sx.blah.discord.api.MissingPermissionsException;
+import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.HTTP429Exception;
@@ -20,9 +22,6 @@ public class Floor {
 	public static void initialize() throws JSONException, IOException
 	{
 		String template = "{"
-            + "\"monsters\":["
-            + "\"Gnome\""
-            + "],"
             + "\"events\":{"
             + "\"Rock\":{"
             + "\"ready\":3,"
@@ -41,16 +40,17 @@ public class Floor {
 		r.close();
 	}
 
-	public static Encounter getMonster(String floor) throws JSONException, IOException
+	public static Encounter getMonster(MessageReceivedEvent event) throws JSONException, IOException
 	{
 		JSONObject json = new JSONObject(DiscordRPG.readFile(Monster.file));
-		JSONObject json2 = new JSONObject(DiscordRPG.readFile(file));
+		JSONObject json2 = new JSONObject(DiscordRPG.readFile(Store.file));
+		JSONObject json3 = new JSONObject(DiscordRPG.readFile(Player.file));
 		JSONObject mob = new JSONObject();
-		JSONObject afloor = new JSONObject();
-		afloor = json2.getJSONObject("floors").getJSONObject(floor);
+		JSONObject player = json3.getJSONObject("players").getJSONObject(event.getMessage().getAuthor().getID());
+		JSONArray monsters = json2.getJSONObject("ranks").getJSONObject(Integer.toString(player.getInt("rank"))).getJSONArray("monsters");
 		Random r = new Random();
-		int ran = r.nextInt(afloor.getJSONArray("monsters").length());
-		String name = afloor.getJSONArray("monsters").getString(ran);
+		int ran = r.nextInt(monsters.length());
+		String name = monsters.getString(ran);
 		mob = json.getJSONObject("monsters").getJSONObject(name);
 		Encounter newEncounter = new Encounter(name, mob.getInt("maxhealth"), mob.getInt("health"), mob.getInt("attack"), mob.getInt("speed"));
 		return newEncounter;
@@ -65,12 +65,16 @@ public class Floor {
 		JSONObject rock = floor.getJSONObject("events").getJSONObject("Rock");
 		if(rock.getInt("ready")==0)
 		{
-			channel.sendMessage("There are no available rocks to mine!");
+			channel.sendMessage("But there was no ore left.");
 		}else{
 			int ready = rock.getInt("ready");
 			ready--;
 			rock.remove("ready");
 			rock.put("ready", ready);
+			FileWriter r = new FileWriter(file);
+			r.write(json.toString(3));
+			r.flush();
+			r.close();
 			Player.inventoryAdd(user, rock.getString("drops"), 1);
 			Event rockRefresh = new Event("RockRefreshEvent", user, channel);
 			DiscordRPG.timedEvents.put(rockRefresh, rock.getInt("refresh_time"));
@@ -83,8 +87,13 @@ public class Floor {
 		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
 		JSONObject rock = json.getJSONObject("floors").getJSONObject(channel.getID()).getJSONObject("events").getJSONObject("Rock");
 		rock.increment("ready");
+		FileWriter r = new FileWriter(file);
+		r.write(json.toString(3));
+		r.flush();
+		r.close();
 		channel.sendMessage("A vein reappears in one of the rocks.\n"
 				+ rock.getInt("ready") + " of " + rock.getInt("max") + " rocks now available.");
+		
 	}
 	
 }

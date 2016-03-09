@@ -14,17 +14,22 @@ import sx.blah.discord.util.HTTP429Exception;
 
 public class Store {
 	
-	public static String file = System.getProperty("user.home")+"/discordRPG/shops.json";
+	public static String file = System.getProperty("user.home")+"/discordRPG/ranks.json";
 	
 	public static void initialize() throws JSONException, IOException
 	{
 		String template = "{"
+				+ "shop:{"
 	            + "\"health_potion\":10,"
 	            + "\"iron_pickaxe\":100"
+	            + "},"
+	            + "monsters:["
+	            + "\"Gnome\""
+	            + "]"
 	            + "}";
 		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
-		JSONObject shop = new JSONObject(template);
-		json.getJSONObject("shops").put("1", shop);
+		JSONObject rank = new JSONObject(template);
+		json.getJSONObject("ranks").put("1", rank);
 		FileWriter r = new FileWriter(file);
 		r.write(json.toString(3));
 		r.flush();
@@ -36,7 +41,7 @@ public class Store {
 		JSONObject json = new JSONObject(DiscordRPG.readFile(Player.file));
 		JSONObject json2 = new JSONObject(DiscordRPG.readFile(file));
 		int number = json.getJSONObject("players").getJSONObject(event.getMessage().getAuthor().getID()).getInt("rank");
-		JSONObject shop = json2.getJSONObject("shops").getJSONObject(Integer.toString(number));
+		JSONObject shop = json2.getJSONObject("ranks").getJSONObject(Integer.toString(number)).getJSONObject("shop");
 		Iterator<String> keys = shop.keys();
 		String output = "```\nAvailable Items:\n";
 		while(keys.hasNext())
@@ -55,15 +60,15 @@ public class Store {
 		JSONObject json = new JSONObject(DiscordRPG.readFile(Player.file));
 		JSONObject json2 = new JSONObject(DiscordRPG.readFile(file));
 		JSONObject player = json.getJSONObject("players").getJSONObject(event.getMessage().getAuthor().getID());
-		int number = json.getJSONObject("players").getJSONObject(event.getMessage().getAuthor().getID()).getInt("floor");
-		JSONObject shop = json2.getJSONObject("shops").getJSONObject(Integer.toString(number));
+		int number = json.getJSONObject("players").getJSONObject(event.getMessage().getAuthor().getID()).getInt("rank");
+		JSONObject shop = json2.getJSONObject("ranks").getJSONObject(Integer.toString(number)).getJSONObject("shop");
 		if(shop.isNull(item))
 		{
 			event.getMessage().getChannel().sendMessage("That is not a valid item to buy.");
 		}else
 		{
 			int cost = shop.getInt(item);
-			if(player.getJSONObject("inventory").isNull("coins") || player.getJSONObject("inventory").getInt("coins")>cost)
+			if(!player.getJSONObject("inventory").isNull("coins") && player.getJSONObject("inventory").getInt("coins")>=cost)
 			{
 				Player.inventoryAdd(event.getMessage().getAuthor(), item, 1);
 				Player.inventoryRemove(event.getMessage().getAuthor(), "coins", cost);

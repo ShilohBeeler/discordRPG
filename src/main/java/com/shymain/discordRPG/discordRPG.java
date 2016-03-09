@@ -49,7 +49,7 @@ public class DiscordRPG {
 		if(eventType.equalsIgnoreCase("defend"))
 		{
 			Monster.defend(user, channel);
-		}else if(eventType.equalsIgnoreCase("RockReadyEvent"))
+		}else if(eventType.equalsIgnoreCase("RockRefreshEvent"))
 		{
 			Floor.addRock(channel);
 		}
@@ -98,12 +98,12 @@ public class DiscordRPG {
 			w.close();
 			Monster.initialize();
 		}
-		File j = new File(System.getProperty("user.home")+"/discordRPG/shops.json");
+		File j = new File(System.getProperty("user.home")+"/discordRPG/ranks.json");
 		if(!j.exists())
 		{
 			j.createNewFile();
-			FileWriter w = new FileWriter(System.getProperty("user.home")+"/discordRPG/shops.json");
-			w.write("{\"shops\":{}}");
+			FileWriter w = new FileWriter(System.getProperty("user.home")+"/discordRPG/ranks.json");
+			w.write("{\"ranks\":{}}");
 			w.flush();
 			w.close();
 			Store.initialize();

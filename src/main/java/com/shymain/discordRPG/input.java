@@ -30,6 +30,10 @@ public class Input {
 			arguments = allArguments.split(" ");
 		}
 		commands:
+		if(command.equalsIgnoreCase(".inv") || command.equalsIgnoreCase(".inventory"))
+		{
+				Player.getInventory(event);
+		}
 		if(event.getMessage().getChannel().getID().equalsIgnoreCase("156840527164211200"))
 		{
 			if(command.equalsIgnoreCase(".help"))
@@ -47,30 +51,11 @@ public class Input {
 				if(arguments==null)
 				{
 					event.getMessage().getChannel().sendMessage("Buy what?");
-					break commands;
 				}
 				Store.buyItem(event, arguments[0]);
-			}else if(command.equalsIgnoreCase(".inv") || command.equalsIgnoreCase(".inventory"))
-			{
-				Player.getInventory(event);
 			}
 		}else if(event.getMessage().getChannel().isPrivate()){
-			if(command.equalsIgnoreCase(".help"))
-			{
-				event.getMessage().getChannel().sendMessage("*.fight* either starts a battle or attacks an enemy.\n"
-						+ "*.inv* displays your inventory's state.");
-			}else if(command.equalsIgnoreCase(".fight") || command.equalsIgnoreCase(".attack"))
-			{
-				if(Monster.currentFights.containsKey(event.getMessage().getAuthor()))
-				{
-					Monster.attack(event.getMessage().getAuthor(), event.getMessage().getChannel());
-				}else{
-					Monster.startFight(event);
-				}
-			}else if(command.equalsIgnoreCase(".inv") || command.equalsIgnoreCase(".inventory"))
-			{
-				Player.getInventory(event);
-			}
+			privateChannels(event);
 		}else
 		{
 			if(command.equalsIgnoreCase(".join"))
@@ -90,6 +75,37 @@ public class Input {
 			{
 				event.getMessage().getChannel().sendMessage("You swing your pick at the rock.");
 				Floor.mineRock(event.getMessage().getAuthor(), event.getMessage().getChannel());
+			}
+		}
+	}
+	
+	public static void privateChannels(MessageReceivedEvent event) throws MissingPermissionsException, HTTP429Exception, DiscordException, JSONException, IOException
+	{
+		String command;
+		String allArguments = "";
+		String[] arguments = null;
+		
+		String rawMessage = event.getMessage().getContent();
+		
+		String parts[] = rawMessage.split(" ", 2);
+		command = parts[0];
+		if(parts.length == 2)
+		{
+			allArguments = parts[1];
+			arguments = allArguments.split(" ");
+		}
+		
+		if(command.equalsIgnoreCase(".help"))
+		{
+			event.getMessage().getChannel().sendMessage("*.fight* either starts a battle or attacks an enemy.\n"
+					+ "*.inv* displays your inventory's state.");
+		}else if(command.equalsIgnoreCase(".fight") || command.equalsIgnoreCase(".attack"))
+		{
+			if(Monster.currentFights.containsKey(event.getMessage().getAuthor()))
+			{
+				Monster.attack(event.getMessage().getAuthor(), event.getMessage().getChannel());
+			}else{
+				Monster.startFight(event);
 			}
 		}
 	}

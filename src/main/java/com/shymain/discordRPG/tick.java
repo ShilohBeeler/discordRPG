@@ -18,7 +18,9 @@ public class Tick extends TimerTask{
 		Iterator<Map.Entry<Event,Integer>> iter = DiscordRPG.timedEvents.entrySet().iterator();
 		while (iter.hasNext()) {
 		    Map.Entry<Event,Integer> entry = iter.next();
+		    System.out.println(DiscordRPG.timedEvents.size());
 		    int temp = entry.getValue();
+		    System.out.println(entry + " " + temp);
 		    temp--;
 		    if(temp==0)
 		    {
