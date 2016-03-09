@@ -36,8 +36,8 @@ public class Input {
 			{
 				event.getMessage().getChannel().sendMessage("*.wares* displays the purchasable item.\n"
 						+ "*.buy [item]* will purchase the specified item.\n"
-						+ "*.price [item]* will show the selling price of the specified item.\n"
-						+ "*.sell [item]* will sell the specified item.");
+						/*+ "*.price [item]* will show the selling price of the specified item.\n"
+						+ "*.sell [item]* will sell the specified item."*/);
 			}else if(command.equalsIgnoreCase(".wares") || command.equalsIgnoreCase(".items"))
 			{
 				Store.displayWares(event);
@@ -53,7 +53,8 @@ public class Input {
 		}else if(event.getMessage().getChannel().isPrivate()){
 			if(command.equalsIgnoreCase(".help"))
 			{
-				event.getMessage().getChannel().sendMessage("*.fight* either starts a battle or attacks an enemy.");
+				event.getMessage().getChannel().sendMessage("*.fight* either starts a battle or attacks an enemy.\n"
+						+ "*.inv* displays your inventory's state.");
 			}else if(command.equalsIgnoreCase(".fight") || command.equalsIgnoreCase(".attack"))
 			{
 				if(Monster.currentFights.containsKey(event.getMessage().getAuthor()))
@@ -62,6 +63,9 @@ public class Input {
 				}else{
 					Monster.startFight(event);
 				}
+			}else if(command.equalsIgnoreCase(".inv") || command.equalsIgnoreCase(".inventory"))
+			{
+				Player.getInventory(event);
 			}
 		}else
 		{
@@ -71,10 +75,13 @@ public class Input {
 				if(json.getJSONObject("players").isNull(event.getMessage().getAuthor().getID()))
 				{
 					Player.create(event.getMessage().getAuthor());
-					event.getMessage().getChannel().sendMessage("You have joined the game.");
+					event.getMessage().getChannel().sendMessage("You have joined the game.\nMost commands are done via PM. Type .help anywhere to see available commands in that location.");
 				}else{
 					event.getMessage().getChannel().sendMessage("You are already in the system!");
 				}
+			}else if(command.equalsIgnoreCase(".help"))
+			{
+				event.getMessage().getChannel().sendMessage("*.join* if you are not already added to the game.");
 			}
 		}
 	}

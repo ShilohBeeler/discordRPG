@@ -3,13 +3,17 @@ package com.shymain.discordRPG;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Iterator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import sx.blah.discord.api.DiscordException;
+import sx.blah.discord.api.MissingPermissionsException;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.events.UserJoinEvent;
 import sx.blah.discord.handle.obj.IUser;
+import sx.blah.discord.util.HTTP429Exception;
 
 public class Player {
 	
@@ -123,6 +127,23 @@ public class Player {
 		r.flush();
 		r.close();
 		return "Success";
+	}
+	
+	public static void getInventory(MessageReceivedEvent event) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
+	{
+		JSONObject json = new JSONObject(DiscordRPG.readFile(Player.file));
+		JSONObject player = json.getJSONObject("players").getJSONObject(event.getMessage().getAuthor().getID());
+		Iterator<String> keys = player.getJSONObject("inventory").keys();
+		String output = "```\nInventory:\n";
+		while(keys.hasNext())
+		{
+			String key = (String)keys.next();
+			int number = player.getJSONObject("inventory").getInt(key);
+			String numbers = Integer.toString(number);
+			output += key + ": " + number + ".\n";
+		}
+		output += "```";
+		event.getMessage().getChannel().sendMessage(output);
 	}
 	
 }

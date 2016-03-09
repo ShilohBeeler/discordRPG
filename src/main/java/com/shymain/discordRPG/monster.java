@@ -51,7 +51,7 @@ public class Monster {
 		JSONObject json = new JSONObject(DiscordRPG.readFile(Player.file));
 		int floor = json.getJSONObject("players").getJSONObject(event.getMessage().getAuthor().getID()).getInt("floor");
 		Encounter newEncounter = Floor.getMonster(floor);
-		event.getMessage().getChannel().sendMessage(event.getMessage().getAuthor().mention() + " has challenged an angry " + newEncounter.name + " to a duel!");
+		event.getMessage().getChannel().sendMessage("You have challenged an angry " + newEncounter.name + " to a duel!");
 		currentFights.put(event.getMessage().getAuthor(), newEncounter);
 		System.out.println(currentFights.toString());
 		Event fight = new Event("Defend", event.getMessage().getAuthor(), event.getMessage().getChannel());
