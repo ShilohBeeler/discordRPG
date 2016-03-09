@@ -49,6 +49,7 @@ public class Store {
 			{
 				Player.inventoryAdd(event.getMessage().getAuthor(), item, 1);
 				Player.inventoryRemove(event.getMessage().getAuthor(), "coins", cost);
+				event.getMessage().getChannel().sendMessage("Successfully bought "+ item + "!");
 			}else{
 				event.getMessage().getChannel().sendMessage("You do not have enough money!");
 			}

@@ -35,6 +35,7 @@ public class Input {
 			if(command.equalsIgnoreCase(".help"))
 			{
 				event.getMessage().getChannel().sendMessage("*.wares* displays the purchasable item.\n"
+						+ "*.inv* will display your inventory.\n"
 						+ "*.buy [item]* will purchase the specified item.\n"
 						/*+ "*.price [item]* will show the selling price of the specified item.\n"
 						+ "*.sell [item]* will sell the specified item."*/);
@@ -49,6 +50,9 @@ public class Input {
 					break commands;
 				}
 				Store.buyItem(event, arguments[0]);
+			}else if(command.equalsIgnoreCase(".inv") || command.equalsIgnoreCase(".inventory"))
+			{
+				Player.getInventory(event);
 			}
 		}else if(event.getMessage().getChannel().isPrivate()){
 			if(command.equalsIgnoreCase(".help"))
