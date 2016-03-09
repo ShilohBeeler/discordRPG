@@ -29,6 +29,7 @@ public class Input {
 			allArguments = parts[1];
 			arguments = allArguments.split(" ");
 		}
+		commands:
 		if(event.getMessage().getChannel().getID().equalsIgnoreCase("156840527164211200"))
 		{
 			if(command.equalsIgnoreCase(".help"))
@@ -40,6 +41,14 @@ public class Input {
 			}else if(command.equalsIgnoreCase(".wares") || command.equalsIgnoreCase(".items"))
 			{
 				Store.displayWares(event);
+			}else if(command.equalsIgnoreCase(".buy"))
+			{
+				if(arguments==null)
+				{
+					event.getMessage().getChannel().sendMessage("Buy what?");
+					break commands;
+				}
+				Store.buyItem(event, arguments[0]);
 			}
 		}else if(event.getMessage().getChannel().isPrivate()){
 			if(command.equalsIgnoreCase(".help"))
@@ -52,6 +61,19 @@ public class Input {
 					Monster.attack(event.getMessage().getAuthor(), event.getMessage().getChannel());
 				}else{
 					Monster.startFight(event);
+				}
+			}
+		}else
+		{
+			if(command.equalsIgnoreCase(".join"))
+			{
+				JSONObject json = new JSONObject(DiscordRPG.readFile(Player.file));
+				if(json.getJSONObject("players").isNull(event.getMessage().getAuthor().getID()))
+				{
+					Player.create(event.getMessage().getAuthor());
+					event.getMessage().getChannel().sendMessage("You have joined the game.");
+				}else{
+					event.getMessage().getChannel().sendMessage("You are already in the system!");
 				}
 			}
 		}

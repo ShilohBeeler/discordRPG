@@ -157,8 +157,10 @@ public class DiscordRPG {
 	@EventSubscriber
 	public static void userJoins(UserJoinEvent event) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
 	{
-		Player.create(event);
-		event.getGuild().getChannels().get(0).sendMessage("A new traveler arrives, sword in hand.");
+		Player.create(event.getUser());
+		event.getGuild().getChannels().get(0).sendMessage("A new traveler arrives, sword in hand.\n"
+				+ event.getUser().mention() + ": Most functions take place via DM. Use .help anywhere in DM or this server to see commands available there.");
+		
 	}
 	
 	public static void main(String[] args) throws DiscordException, JSONException, IOException{

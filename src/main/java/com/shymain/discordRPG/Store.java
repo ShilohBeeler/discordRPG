@@ -32,9 +32,27 @@ public class Store {
 		event.getMessage().getChannel().sendMessage(output);
 	}
 	
-	public static void buyItem(MessageReceivedEvent event, String item) throws JSONException, IOException
+	public static void buyItem(MessageReceivedEvent event, String item) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
 	{
-		Player.inventoryRemove(event.getMessage().getAuthor(), item, 1);
+		JSONObject json = new JSONObject(DiscordRPG.readFile(Player.file));
+		JSONObject json2 = new JSONObject(DiscordRPG.readFile(Floor.file));
+		JSONObject player = json.getJSONObject("players").getJSONObject(event.getMessage().getAuthor().getID());
+		int number = json.getJSONObject("players").getJSONObject(event.getMessage().getAuthor().getID()).getInt("floor");
+		JSONObject floor = json2.getJSONObject("floors").getJSONObject(Integer.toString(number));
+		if(floor.getJSONObject("shop").isNull(item))
+		{
+			event.getMessage().getChannel().sendMessage("That is not a valid item to buy.");
+		}else
+		{
+			int cost = floor.getJSONObject("shop").getInt(item);
+			if(player.getJSONObject("inventory").isNull("coins") || player.getJSONObject("inventory").getInt("coins")>cost)
+			{
+				Player.inventoryAdd(event.getMessage().getAuthor(), item, 1);
+				Player.inventoryRemove(event.getMessage().getAuthor(), "coins", cost);
+			}else{
+				event.getMessage().getChannel().sendMessage("You do not have enough money!");
+			}
+		}
 	}
 	
 }

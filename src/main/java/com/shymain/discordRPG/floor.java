@@ -20,7 +20,7 @@ public class Floor {
             + "\"iron_pickaxe\":100"
             + "},"
             + "\"monsters\":["
-            + "\"Gnomes\""
+            + "\"Gnome\""
             + "]"
     		+ "}";
 		JSONObject json = new JSONObject(DiscordRPG.readFile(file));

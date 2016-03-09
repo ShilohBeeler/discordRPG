@@ -15,7 +15,7 @@ public class Player {
 	
 	public static String file = System.getProperty("user.home")+"/discordRPG/players.json";
 	
-	public static void create(UserJoinEvent event) throws JSONException, IOException
+	public static void create(IUser user) throws JSONException, IOException
 	{
 		String template = "{"
            + "stats:" 
@@ -42,7 +42,7 @@ public class Player {
            +"}";
 		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
 		JSONObject player = new JSONObject(template);
-		json.getJSONObject("players").put(event.getUser().getID(), player);
+		json.getJSONObject("players").put(user.getID(), player);
 		FileWriter r = new FileWriter(file);
 		r.write(json.toString(3));
 		r.flush();
