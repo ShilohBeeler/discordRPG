@@ -34,15 +34,15 @@ public class Store {
 	public static void displayWares(MessageReceivedEvent event) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
 	{
 		JSONObject json = new JSONObject(DiscordRPG.readFile(Player.file));
-		JSONObject json2 = new JSONObject(DiscordRPG.readFile(Floor.file));
-		int number = json.getJSONObject("players").getJSONObject(event.getMessage().getAuthor().getID()).getInt("floor");
-		JSONObject floor = json2.getJSONObject("floors").getJSONObject(Integer.toString(number));
-		Iterator<String> keys = floor.getJSONObject("shop").keys();
+		JSONObject json2 = new JSONObject(DiscordRPG.readFile(file));
+		int number = json.getJSONObject("players").getJSONObject(event.getMessage().getAuthor().getID()).getInt("rank");
+		JSONObject shop = json2.getJSONObject("shops").getJSONObject(Integer.toString(number));
+		Iterator<String> keys = shop.keys();
 		String output = "```\nAvailable Items:\n";
 		while(keys.hasNext())
 		{
 			String key = (String)keys.next();
-			int cost = floor.getJSONObject("shop").getInt(key);
+			int cost = shop.getInt(key);
 			String costs = Integer.toString(cost);
 			output += key + ": Costs " + costs + " gold.\n";
 		}
@@ -53,16 +53,16 @@ public class Store {
 	public static void buyItem(MessageReceivedEvent event, String item) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
 	{
 		JSONObject json = new JSONObject(DiscordRPG.readFile(Player.file));
-		JSONObject json2 = new JSONObject(DiscordRPG.readFile(Floor.file));
+		JSONObject json2 = new JSONObject(DiscordRPG.readFile(file));
 		JSONObject player = json.getJSONObject("players").getJSONObject(event.getMessage().getAuthor().getID());
 		int number = json.getJSONObject("players").getJSONObject(event.getMessage().getAuthor().getID()).getInt("floor");
-		JSONObject floor = json2.getJSONObject("floors").getJSONObject(Integer.toString(number));
-		if(floor.getJSONObject("shop").isNull(item))
+		JSONObject shop = json2.getJSONObject("shops").getJSONObject(Integer.toString(number));
+		if(shop.isNull(item))
 		{
 			event.getMessage().getChannel().sendMessage("That is not a valid item to buy.");
 		}else
 		{
-			int cost = floor.getJSONObject("shop").getInt(item);
+			int cost = shop.getInt(item);
 			if(player.getJSONObject("inventory").isNull("coins") || player.getJSONObject("inventory").getInt("coins")>cost)
 			{
 				Player.inventoryAdd(event.getMessage().getAuthor(), item, 1);

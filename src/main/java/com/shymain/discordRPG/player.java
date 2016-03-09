@@ -40,7 +40,7 @@ public class Player {
            +     "feet: \"iron_feet\","
            +     "weapon: \"sword\""
            + "},"
-           + "floor: 1,"
+           + "rank: 1,"
            + "health: 10,"
            + "maxhealth: 10"
            +"}";
@@ -68,10 +68,10 @@ public class Player {
 		return "Success";
 	}
 	
-	public static String floorUp(IUser user) throws JSONException, IOException{
+	public static String rankUp(IUser user) throws JSONException, IOException{
 		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
 		JSONObject player = json.getJSONObject("players").getJSONObject(user.getID());
-		player.increment("floor");
+		player.increment("rank");
 		FileWriter r = new FileWriter(file);
 		r.write(json.toString(3));
 		r.flush();
