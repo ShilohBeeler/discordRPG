@@ -1,8 +1,3 @@
-/*
- * Undummy startFight to take from json file for floor.
- * Make it possible to add monsters instead of making initialize static.
- */
-
 package com.shymain.discordRPG;
 
 import java.io.FileWriter;
@@ -95,6 +90,7 @@ public class Monster {
 		channel.sendMessage(user.mention() + " has defeated the " + name + "!\n"
 				+ "It drops: "+ dropNumber +"x "+dropType+"!");
 		Player.inventoryAdd(user, dropType, dropNumber);
+		Player.addXP(user, channel, "fighting", monster.getInt("xp"));
 		DiscordRPG.timedEvents.remove(DiscordRPG.eventStorage.get(user));
 		DiscordRPG.eventStorage.remove(user);
 		currentFights.remove(user);

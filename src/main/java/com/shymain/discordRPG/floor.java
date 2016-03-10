@@ -26,6 +26,7 @@ public class Floor {
             + "\"Rock\":{"
             + "\"ready\":3,"
             + "\"max\":3,"
+            + "\"xp\":3,"
             + "\"refresh_time\": 60,"
             + "\"drops\":\"iron_ore\""
             + "}"
@@ -79,6 +80,7 @@ public class Floor {
 			Event rockRefresh = new Event("RockRefreshEvent", user, channel);
 			DiscordRPG.timedEvents.put(rockRefresh, rock.getInt("refresh_time"));
 			channel.sendMessage("You get a " + rock.getString("drops") + "!");
+			Player.addXP(user, channel, "mining", rock.getInt("xp"));
 		}
 	}
 	

@@ -12,6 +12,7 @@ import sx.blah.discord.api.DiscordException;
 import sx.blah.discord.api.MissingPermissionsException;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.events.UserJoinEvent;
+import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.HTTP429Exception;
 
@@ -164,9 +165,28 @@ public class Player {
 		r.close();
 	}
 	
-	public static void addXP(IUser user, String skill, int xp)
+	public static void addXP(IUser user, IChannel channel, String skill, int xp) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
 	{
-		
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		JSONObject player = json.getJSONObject("players").getJSONObject(user.getID());
+		JSONObject thisSkill = player.getJSONObject("stats").getJSONObject(skill);
+		int level = thisSkill.getInt("level");
+		int exp = thisSkill.getInt("xp");
+		exp += xp;
+		while(exp > (level^2 - level + 10))
+		{
+			level++;
+			exp -= (level^2 - level + 10);
+			channel.sendMessage("You have leveled up your " + skill + " to level "+ level +"!");
+		}
+		thisSkill.remove("level");
+		thisSkill.put("level", level);
+		thisSkill.remove("xp");
+		thisSkill.put("xp", exp);
+		FileWriter r = new FileWriter(file);
+		r.write(json.toString(3));
+		r.flush();
+		r.close();
 	}
 	
 }
