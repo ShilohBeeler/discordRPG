@@ -9,6 +9,7 @@ import sx.blah.discord.api.DiscordException;
 import sx.blah.discord.api.MissingPermissionsException;
 import sx.blah.discord.handle.EventSubscriber;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
+import sx.blah.discord.handle.obj.IPrivateChannel;
 import sx.blah.discord.util.HTTP429Exception;
 
 public class Input {
@@ -38,7 +39,24 @@ public class Input {
 		item = allArguments;
 		item = item.replaceAll(" ", "_");
 		commands:
-		if(command.equalsIgnoreCase(".inv") || command.equalsIgnoreCase(".inventory"))
+		if(command.equalsIgnoreCase(".help")){
+			IPrivateChannel pm = null;
+			try {
+				pm = event.getClient().getOrCreatePMChannel(event.getMessage().getAuthor());
+			} catch (Exception e) {
+				event.getMessage().getChannel().sendMessage("You managed to find a new exception. Good Job.");
+				break commands;
+			}
+			pm.sendMessage("**Floor Commands:**\n"
+					+ "*.join* if the bot didn't add you automatically.\n"
+					+ "*.inv* displays your inventory.\n"
+					+ "*.use [item]* uses said item.\n"
+					+ "*.equip [item]* equips item.\n"
+					+ "*.unequip [slot]* unequips item in slot.\n"
+					+ "*.body* lists equipped items.\n"
+					+ "*.skills* lists skills.");
+		}
+		else if(command.equalsIgnoreCase(".inv") || command.equalsIgnoreCase(".inventory"))
 		{
 			Player.getInventory(event);
 		}else if(command.equalsIgnoreCase(".use"))
@@ -50,6 +68,8 @@ public class Input {
 			Player.unequip(event.getMessage().getAuthor(), event.getMessage().getChannel(), item);
 		}else if(command.equalsIgnoreCase(".equipment") || command.equalsIgnoreCase(".body")){
 			Player.getEquip(event.getMessage().getAuthor(), event.getMessage().getChannel());
+		}else if(command.equalsIgnoreCase(".skills") || command.equalsIgnoreCase(".stats")){
+			Player.getSkills(event.getMessage().getAuthor(), event.getMessage().getChannel());
 		}else if(event.getMessage().getChannel().getID().equalsIgnoreCase("156840527164211200"))
 		{
 			shop(event);
@@ -66,8 +86,8 @@ public class Input {
 	{
 		if(command.equalsIgnoreCase(".help"))
 		{
-			event.getMessage().getChannel().sendMessage("*.fight* either starts a battle or attacks an enemy.\n"
-					+ "*.inv* displays your inventory's state.");
+			event.getMessage().getChannel().sendMessage("PM Commands:\n"
+					+ "*.fight* either starts a battle or attacks an enemy.\n");
 		}else if(command.equalsIgnoreCase(".fight") || command.equalsIgnoreCase(".attack"))
 		{
 			if(Monster.currentFights.containsKey(event.getMessage().getAuthor()))

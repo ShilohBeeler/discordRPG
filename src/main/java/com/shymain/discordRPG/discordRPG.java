@@ -128,43 +128,6 @@ public class DiscordRPG {
 			arguments = allArguments.split(" ");
 		}
 		Input.commands(event);
-		/*testMessages:
-		if(command.equalsIgnoreCase("levelup"))
-		{
-			player.floorUp(event.getMessage().getAuthor());
-		}else if(command.equalsIgnoreCase("statsup"))
-		{
-			player.statsUp(event.getMessage().getAuthor(), "mining");
-		}else if(command.equalsIgnoreCase("inventoryremove"))
-		{
-			String result = player.inventoryRemove(event.getMessage().getAuthor(), "iron_ore", 1);
-			if(result.equalsIgnoreCase("PlayerNotFoundError"))
-			{
-				event.getMessage().getChannel().sendMessage("Player could not be found.");
-				break testMessages;
-			}else if(result.equalsIgnoreCase("ItemNotFoundError"))
-			{
-				event.getMessage().getChannel().sendMessage("You do not have any of that item!");
-				break testMessages;
-			}else if(result.equalsIgnoreCase("ItemNumberError"))
-			{
-				event.getMessage().getChannel().sendMessage("You do not have enough of that item!");
-				break testMessages;
-			}else{
-				event.getMessage().getChannel().sendMessage("One iron ore subtracted!");
-			}
-		}else if(command.equalsIgnoreCase("inventoryadd"))
-		{
-			String result = player.inventoryAdd(event.getMessage().getAuthor(), "iron_ore", 1);
-			if(result.equalsIgnoreCase("PlayerNotFoundError"))
-			{
-				event.getMessage().getChannel().sendMessage("Player could not be found.");
-				break testMessages;
-			}else{
-				event.getMessage().getChannel().sendMessage("One iron ore added.");
-			}
-		}
-		*/
 	}
 
 	@EventSubscriber

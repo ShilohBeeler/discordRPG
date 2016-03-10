@@ -54,21 +54,6 @@ public class Player {
 		r.close();
 	}
 	
-	public static String statsUp(IUser user, String stat) throws JSONException, IOException{
-		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
-		JSONObject player = json.getJSONObject("players").getJSONObject(user.getID());
-		if(!player.getJSONObject("stats").has(stat))
-		{
-			return "StatNotFoundError";
-		}
-		player.getJSONObject("stats").increment(stat);
-		FileWriter r = new FileWriter(file);
-		r.write(json.toString(3));
-		r.flush();
-		r.close();
-		return "Success";
-	}
-	
 	public static String rankUp(IUser user) throws JSONException, IOException{
 		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
 		JSONObject player = json.getJSONObject("players").getJSONObject(user.getID());
@@ -263,4 +248,23 @@ public class Player {
 		channel.sendMessage(output);
 	}
 	
+	public static void getSkills(IUser user, IChannel channel) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
+	{
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		JSONObject player = json.getJSONObject("players").getJSONObject(user.getID());
+		Iterator<String> keys = player.getJSONObject("stats").keys();
+		String output = "```\nSkills:\n";
+		while(keys.hasNext())
+		{
+			String key = (String)keys.next();
+			int level = player.getJSONObject("stats").getJSONObject(key).getInt("level");
+			int xp = player.getJSONObject("stats").getJSONObject(key).getInt("xp");
+			String maxExp = Integer.toString(level^2 - level + 10);
+			String levelS = Integer.toString(level);
+			String exp = Integer.toString(xp);
+			output += key + ": Level " + levelS + ". " + exp + "/" + maxExp + "xp to next level.\n";
+		}
+		output += "```";
+		channel.sendMessage(output);
+	}
 }
