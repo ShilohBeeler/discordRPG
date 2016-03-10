@@ -38,13 +38,17 @@ public class Input {
 		if(command.equalsIgnoreCase(".inv") || command.equalsIgnoreCase(".inventory"))
 		{
 			Player.getInventory(event);
-		}
-		if(event.getMessage().getChannel().getID().equalsIgnoreCase("156840527164211200"))
+		}else if(command.equalsIgnoreCase(".use"))
+		{
+			useHandling(event);
+		}	
+		else if(event.getMessage().getChannel().getID().equalsIgnoreCase("156840527164211200"))
 		{
 			shop(event);
-		}else if(event.getMessage().getChannel().isPrivate()){
+		}else if(event.getMessage().getChannel().isPrivate())
+			{
 			privateChannels(event);
-		}else if(event.getMessage().getChannel().getGuild().getID().equalsIgnoreCase(""))
+		}else if(event.getMessage().getChannel().getGuild().getID().equalsIgnoreCase("149548522058809344"))
 		{
 			floorCommands(event);
 		}
@@ -76,7 +80,7 @@ public class Input {
 					+ "*.buy [item]* will purchase the specified item.\n"
 					/*+ "*.price [item]* will show the selling price of the specified item.\n"
 					+ "*.sell [item]* will sell the specified item."*/);
-		}else if(command.equalsIgnoreCase(".wares") || command.equalsIgnoreCase(".items"))
+		}else if(command.equalsIgnoreCase(".wares") || command.equalsIgnoreCase(".items") || command.equalsIgnoreCase(".shop"))
 		{
 			Store.displayWares(event);
 		}else if(command.equalsIgnoreCase(".buy"))
@@ -108,6 +112,39 @@ public class Input {
 		{
 			event.getMessage().getChannel().sendMessage("You swing your pick at the rock.");
 			Floor.mineRock(event.getMessage().getAuthor(), event.getMessage().getChannel());
+		}
+	}
+	
+	public static void useHandling(MessageReceivedEvent event) throws MissingPermissionsException, HTTP429Exception, DiscordException, JSONException, IOException
+	{
+		if(arguments==null)
+		{
+			event.getMessage().getChannel().sendMessage("Use what?");
+			return;
+		}
+		String item = allArguments;
+		item = item.replaceAll(" ", "_");
+		if(item.equalsIgnoreCase("health_potion"))
+		{
+			event.getMessage().getChannel().sendMessage("You take a long drink of the draught. It heals five health!");
+			Player.heal(event, 5);
+			Player.inventoryRemove(event.getMessage().getAuthor(), "health_potion", 1);
+		}else if(item.equalsIgnoreCase("steak"))
+		{
+			event.getMessage().getChannel().sendMessage("Mmmm. Delicious. Probably rotten, but still delicious.");
+			Player.inventoryRemove(event.getMessage().getAuthor(), "steak", 1);			
+		}else if(item.equalsIgnoreCase("coins") || (item.equalsIgnoreCase("coin")))
+		{
+			event.getMessage().getChannel().sendMessage("You flip a coin in the air, and wish you knew that you could use *.buy* in the shop.");
+		}else if(item.equalsIgnoreCase("iron_axe"))
+		{
+			event.getMessage().getChannel().sendMessage("You heft the axe in your hand, eyeing it curiously. If only it was possible to *.equip*...");
+		}else if(item.equalsIgnoreCase("iron_ore"))
+		{
+			event.getMessage().getChannel().sendMessage("You contemplate the fact that being able to smelt this ore would be great.");
+		}else if(item.equalsIgnoreCase("iron_pickaxe"))
+		{
+			event.getMessage().getChannel().sendMessage("You swing the pickaxe as if mining a rock, and then stop, realizing how silly it looks.");
 		}
 	}
 	

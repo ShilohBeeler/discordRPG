@@ -24,9 +24,9 @@ public class Player {
 		String template = "{"
            + "stats:" 
            + "{"
-           +     "mining: 1,"
-           +     "fighting: 1,"
-           +     "magic: 1"
+           +     "mining: { level: 1, xp: 0},"
+           +     "fighting: { level: 1, xp: 0},"
+           +     "magic: { level: 1, xp: 0}"
            + "},"
            + "inventory:"
            + "{"
@@ -131,7 +131,7 @@ public class Player {
 	
 	public static void getInventory(MessageReceivedEvent event) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
 	{
-		JSONObject json = new JSONObject(DiscordRPG.readFile(Player.file));
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
 		JSONObject player = json.getJSONObject("players").getJSONObject(event.getMessage().getAuthor().getID());
 		Iterator<String> keys = player.getJSONObject("inventory").keys();
 		String output = "```\nInventory:\n";
@@ -144,6 +144,29 @@ public class Player {
 		}
 		output += "```";
 		event.getMessage().getChannel().sendMessage(output);
+	}
+	
+	public static void heal(MessageReceivedEvent event, int health) throws JSONException, IOException
+	{
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		JSONObject player = json.getJSONObject("players").getJSONObject(event.getMessage().getAuthor().getID());
+		int currenthealth = player.getInt("health");
+		currenthealth += health;
+		if(currenthealth>player.getInt("maxhealth"))
+		{
+			currenthealth = player.getInt("maxhealth");
+		}
+		player.remove("health");
+		player.put("health", currenthealth);
+		FileWriter r = new FileWriter(file);
+		r.write(json.toString(3));
+		r.flush();
+		r.close();
+	}
+	
+	public static void addXP(IUser user, String skill, int xp)
+	{
+		
 	}
 	
 }
