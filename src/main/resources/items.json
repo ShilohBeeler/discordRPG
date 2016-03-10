@@ -47,7 +47,8 @@
     health_potion:{
         flavor_text:"You take a long drink of the draught. It heals five health!",
         toRemove:true,
-        heal: 5
+        heal:5,
+        value:5
     }
 } 
 }

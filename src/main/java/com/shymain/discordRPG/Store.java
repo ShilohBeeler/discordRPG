@@ -1,5 +1,6 @@
 package com.shymain.discordRPG;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
@@ -79,4 +80,55 @@ public class Store {
 		}
 	}
 	
+	public static void sellItem(MessageReceivedEvent event, String item, int number) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
+	{
+		ClassLoader classLoader = Input.class.getClassLoader();
+		File iFile = new File(classLoader.getResource("items.json").getFile());
+		JSONObject json = new JSONObject(DiscordRPG.readFile(Player.file));
+		JSONObject json2 = new JSONObject(DiscordRPG.readFile(iFile.getAbsolutePath()));
+		JSONObject player = json.getJSONObject("players").getJSONObject(event.getMessage().getAuthor().getID());
+		JSONObject items = json2.getJSONObject("items");
+		if(items.isNull(item))
+		{
+			event.getMessage().getChannel().sendMessage("Wait, you're trying to sell *what*? Are you trying to pull a fast one on me?");
+			return;
+		}else if(player.getJSONObject("inventory").isNull(item))
+		{
+			event.getMessage().getChannel().sendMessage("You might want to wait until you actually have the item to sell it.");
+			return;
+		}else if(player.getJSONObject("inventory").getInt(item)<number)
+		{
+			event.getMessage().getChannel().sendMessage("You don't have enough of this item to sell.");
+			return;
+		}else if(items.getJSONObject(item).getInt("value")==0)
+		{
+			event.getMessage().getChannel().sendMessage("That is an unsellable item.");
+			return;
+		}
+		
+		int moneyOwed = items.getJSONObject(item).getInt("value") * number;
+		Player.inventoryRemove(event.getMessage().getAuthor(), item, number);
+		Player.inventoryAdd(event.getMessage().getAuthor(), "coins", moneyOwed);
+		event.getMessage().getChannel().sendMessage("You turn over the "+item+" for "+ Integer.toString(items.getJSONObject(item).getInt("value"))+" coins apiece, for a total of " + moneyOwed +".");
+	}
+
+	public static void valueItem(MessageReceivedEvent event, String item) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
+	{
+		ClassLoader classLoader = Input.class.getClassLoader();
+		File iFile = new File(classLoader.getResource("items.json").getFile());
+		JSONObject json = new JSONObject(DiscordRPG.readFile(iFile.getAbsolutePath()));
+		JSONObject items = json.getJSONObject("items");
+		if(items.isNull(item))
+		{
+			event.getMessage().getChannel().sendMessage("Let me see... the price for a nonexistant item is 5 to the square root of 3... add 7... carry the one... divide by zer--OH GOD");
+			return;
+		}
+		int value = items.getJSONObject(item).getInt("value");
+		if(value==0)
+		{
+			event.getMessage().getChannel().sendMessage("Sorry, I can't buy that. It wouldn't sell at all.");
+			return;
+		}
+		event.getMessage().getChannel().sendMessage("That " + item + " is worth about... let's say, " + Integer.toString(value) + " coins apiece.");
+	}
 }

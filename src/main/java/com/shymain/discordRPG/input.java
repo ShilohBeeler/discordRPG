@@ -2,7 +2,10 @@ package com.shymain.discordRPG;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -118,7 +121,35 @@ public class Input {
 			{
 				event.getMessage().getChannel().sendMessage("Buy what?");
 			}
-			Store.buyItem(event, arguments[0]);
+			Store.buyItem(event, item);
+		}else if(command.equalsIgnoreCase(".sell"))
+		{
+			String[] test = allArguments.split(" ");
+			int k = test.length;
+			int number = 0;
+			String theitem = "";
+			if(k<2)
+			{
+				return;
+			}
+			if(StringUtils.isNumeric(test[k-1]))
+			{
+				for(int j = 0;j<k-1;j++)
+				{
+					theitem+=test[j]+"_";
+				}
+				theitem = theitem.substring(0, theitem.lastIndexOf("_"));
+				number = Integer.parseInt(test[k-1]);
+			}
+			else
+		    {
+		    	theitem = item;
+		    	number = 1;
+		    }
+		    Store.sellItem(event, theitem, number);
+		}else if(command.equalsIgnoreCase(".value") || command.equalsIgnoreCase(".price"))
+		{
+			Store.valueItem(event, item);
 		}
 	}
 	
