@@ -5,12 +5,16 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.DiscordException;
@@ -107,6 +111,19 @@ public class DiscordRPG {
 			j.createNewFile();
 			FileWriter w = new FileWriter(System.getProperty("user.home")+"/discordRPG/ranks.json");
 			w.write("{\"ranks\":{}}");
+			w.flush();
+			w.close();
+			Store.initialize();
+		}
+		File k = new File(System.getProperty("user.home")+"/discordRPG/items.json");
+		if(!k.exists())
+		{
+			k.createNewFile();
+			InputStream inputStream = DiscordRPG.class.getResourceAsStream("/resources/items.json");
+			String theString = IOUtils.toString(inputStream, "UTF-8");
+			JSONObject json = new JSONObject(theString);
+			FileWriter w = new FileWriter(System.getProperty("user.home")+"/discordRPG/items.json");
+			w.write(json.toString(3));
 			w.flush();
 			w.close();
 			Store.initialize();

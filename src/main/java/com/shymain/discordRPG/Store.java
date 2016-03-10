@@ -16,6 +16,7 @@ import sx.blah.discord.util.HTTP429Exception;
 public class Store {
 	
 	public static String file = System.getProperty("user.home")+"/discordRPG/ranks.json";
+	public static String file2 = System.getProperty("user.home")+"/discordRPG/items.json";
 	
 	public static void initialize() throws JSONException, IOException
 	{
@@ -82,17 +83,18 @@ public class Store {
 	
 	public static void sellItem(MessageReceivedEvent event, String item, int number) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
 	{
-		ClassLoader classLoader = Input.class.getClassLoader();
-		File iFile = new File(classLoader.getResource("items.json").getFile());
 		JSONObject json = new JSONObject(DiscordRPG.readFile(Player.file));
-		JSONObject json2 = new JSONObject(DiscordRPG.readFile(iFile.getAbsolutePath()));
+		JSONObject json2 = new JSONObject(DiscordRPG.readFile(file2));
 		JSONObject player = json.getJSONObject("players").getJSONObject(event.getMessage().getAuthor().getID());
 		JSONObject items = json2.getJSONObject("items");
+		System.out.println(item);
+		System.out.println(number);
 		if(items.isNull(item))
 		{
 			event.getMessage().getChannel().sendMessage("Wait, you're trying to sell *what*? Are you trying to pull a fast one on me?");
 			return;
-		}else if(player.getJSONObject("inventory").isNull(item))
+		}
+		if(player.getJSONObject("inventory").isNull(item))
 		{
 			event.getMessage().getChannel().sendMessage("You might want to wait until you actually have the item to sell it.");
 			return;
@@ -114,9 +116,8 @@ public class Store {
 
 	public static void valueItem(MessageReceivedEvent event, String item) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
 	{
-		ClassLoader classLoader = Input.class.getClassLoader();
-		File iFile = new File(classLoader.getResource("items.json").getFile());
-		JSONObject json = new JSONObject(DiscordRPG.readFile(iFile.getAbsolutePath()));
+		
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file2));
 		JSONObject items = json.getJSONObject("items");
 		if(items.isNull(item))
 		{

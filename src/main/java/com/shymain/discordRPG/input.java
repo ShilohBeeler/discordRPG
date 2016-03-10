@@ -128,7 +128,7 @@ public class Input {
 			int k = test.length;
 			int number = 0;
 			String theitem = "";
-			if(k<2)
+			if(k<1)
 			{
 				return;
 			}
