@@ -1,5 +1,6 @@
 package com.shymain.discordRPG;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.json.JSONException;
@@ -150,34 +151,31 @@ public class Input {
 			event.getMessage().getChannel().sendMessage("Use what?");
 			return;
 		}
+		ClassLoader classLoader = Input.class.getClassLoader();
+		File iFile = new File(classLoader.getResource("items.json").getFile());
 		JSONObject json = new JSONObject(DiscordRPG.readFile(Player.file));
+		JSONObject json2 = new JSONObject(DiscordRPG.readFile(iFile.getAbsolutePath()));
+		JSONObject items = json2.getJSONObject("items");
 		JSONObject player = json.getJSONObject("players").getJSONObject(event.getMessage().getAuthor().getID());
 		if(player.getJSONObject("inventory").isNull(item))
 		{
 			event.getMessage().getChannel().sendMessage("Your \"summoning items from out of nowhere\" skill is not yet at level 99. Using an item you do not possess is not possible.");
 			return;
 		}
-		if(item.equalsIgnoreCase("health_potion"))
+		if(items.isNull(item))
 		{
-			event.getMessage().getChannel().sendMessage("You take a long drink of the draught. It heals five health!");
-			Player.heal(event, 5);
-			Player.inventoryRemove(event.getMessage().getAuthor(), "health_potion", 1);
-		}else if(item.equalsIgnoreCase("steak"))
+			event.getMessage().getChannel().sendMessage("Maybe if you believe *just* a little harder, that nonexistant item will appear!");
+			return;
+		}
+		
+		event.getMessage().getChannel().sendMessage(items.getJSONObject(item).getString("flavor_text"));
+		if(items.getJSONObject(item).getBoolean("toRemove"))
 		{
-			event.getMessage().getChannel().sendMessage("Mmmm. Delicious. Probably rotten, but still delicious.");
-			Player.inventoryRemove(event.getMessage().getAuthor(), "steak", 1);			
-		}else if(item.equalsIgnoreCase("coins") || (item.equalsIgnoreCase("coin")))
+			Player.inventoryRemove(event.getMessage().getAuthor(), item, 1);
+		}
+		if(items.getJSONObject(item).has("heal"))
 		{
-			event.getMessage().getChannel().sendMessage("You flip a coin in the air, and wish you knew that you could use *.buy* in the shop.");
-		}else if(item.equalsIgnoreCase("iron_axe"))
-		{
-			event.getMessage().getChannel().sendMessage("You heft the axe in your hand, eyeing it curiously. If only it was possible to *.equip*...");
-		}else if(item.equalsIgnoreCase("iron_ore"))
-		{
-			event.getMessage().getChannel().sendMessage("You contemplate the fact that being able to smelt this ore would be great.");
-		}else if(item.equalsIgnoreCase("iron_pickaxe"))
-		{
-			event.getMessage().getChannel().sendMessage("You swing the pickaxe as if mining a rock, and then stop, realizing how silly it looks.");
+			Player.heal(event, items.getJSONObject(item).getInt("heal"));
 		}
 	}
 	

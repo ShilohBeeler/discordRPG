@@ -1,0 +1,53 @@
+{items:{
+    coins:{
+        flavor_text:"You flip a coin in the air, and wish you knew that you could use *.buy* in the shop.",
+        toRemove:false,
+        value:1
+    },
+    iron_axe:{
+        flavor_text:"You heft the axe in your hand, eyeing it curiously. If only there was a tree to .chop...",
+        toRemove:false,
+        value:0
+    },
+    iron_head:{
+        flavor_text:"An old, sturdy helmet. In very good condition, hopefully not from lack of use.",
+        toRemove:false,
+        value:0
+    },
+    iron_body:{
+        flavor_text:"A well-forged chestplate. Noticeable dents in areas.",
+        toRemove:false,
+        value:0
+    },
+    iron_feet:{
+        flavor_text:"The boots are caked with mud, as is to be expected of shoes that go everywhere.",
+        toRemove:false,
+        value:0
+    },
+    sword:{
+        flavor_text:"Overhand stroke! Underhand stroke! Side swipe, and lunge forward -- and promptly fall over, imbalanced. Ouch.",
+        toRemove:false,
+        value:0
+    },
+    iron_pickaxe:{
+        flavor_text:"You swing the pickaxe as if mining a rock, and then stop, realizing how silly it looks.",
+        toRemove:false,
+        value:75
+    },
+    steak:{
+        flavor_text:"Mmmm. Delicious. Probably rotten, but still delicious.",
+        toRemove:true,
+        value:0
+    },
+    iron_ore:{
+        flavor_text:"You contemplate the fact that being able to smelt this ore would be great.",
+        toRemove:false,
+        value:5
+    },
+    health_potion:{
+        flavor_text:"You take a long drink of the draught. It heals five health!",
+        toRemove:true,
+        heal: 5
+    }
+} 
+}
