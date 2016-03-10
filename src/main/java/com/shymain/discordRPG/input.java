@@ -233,6 +233,9 @@ public class Input {
 			}else if(subcommand.equalsIgnoreCase("edit"))
 			{
 				Item.value(event.getMessage().getAuthor(), event.getMessage().getChannel(), split[1], split[2], split[3]);
+			}else if(subcommand.equalsIgnoreCase("remove"))
+			{
+				Item.remove(event.getMessage().getAuthor(), event.getMessage().getChannel(), allArgs);
 			}
 		}
 	}

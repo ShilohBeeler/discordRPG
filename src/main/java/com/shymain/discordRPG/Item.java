@@ -65,4 +65,20 @@ public class Item {
 		r.close();
 	}
 	
+	public static void remove(IUser user, IChannel channel, String item) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
+	{
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		JSONObject items = json.getJSONObject("items");
+		if(!items.has(item))
+		{
+			channel.sendMessage("Item doesn't exist.");
+			return;
+		}
+		items.remove(item);
+		FileWriter r = new FileWriter(file);
+		r.write(json.toString(3));
+		r.flush();
+		r.close();
+	}
+	
 }
