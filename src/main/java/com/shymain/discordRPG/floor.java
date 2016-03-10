@@ -67,8 +67,6 @@ public class Floor {
 	public static void mineRock(IUser user, IChannel channel) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
 	{
 		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
-		JSONObject json2 = new JSONObject(DiscordRPG.readFile(Player.file));
-		JSONObject player = json2.getJSONObject("players").getJSONObject(user.getID());
 		JSONObject floor = json.getJSONObject("floors").getJSONObject(channel.getID());
 		JSONObject rock = floor.getJSONObject("events").getJSONObject("Rock");
 		if(rock.getInt("ready")==0)
@@ -108,8 +106,6 @@ public class Floor {
 	public static void cutTree(IUser user, IChannel channel) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
 	{
 		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
-		JSONObject json2 = new JSONObject(DiscordRPG.readFile(Player.file));
-		JSONObject player = json2.getJSONObject("players").getJSONObject(user.getID());
 		JSONObject floor = json.getJSONObject("floors").getJSONObject(channel.getID());
 		JSONObject tree = floor.getJSONObject("events").getJSONObject("Tree");
 		if(tree.getInt("ready")==0)

@@ -1,6 +1,5 @@
 package com.shymain.discordRPG;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
@@ -11,7 +10,6 @@ import org.json.JSONObject;
 import sx.blah.discord.api.DiscordException;
 import sx.blah.discord.api.MissingPermissionsException;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
-import sx.blah.discord.handle.impl.events.UserJoinEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.HTTP429Exception;
@@ -27,7 +25,7 @@ public class Player {
            + "{"
            +     "mining: { level: 1, xp: 0},"
            +     "fighting: { level: 1, xp: 0},"
-           +     "magic: { level: 1, xp: 0}"
+           +     "magic: { level: 1, xp: 0},"
            +     "woodcutting: { level: 1, xp: 0}"
            + "},"
            + "inventory:"
@@ -161,8 +159,8 @@ public class Player {
 		exp += xp;
 		while(exp > (level * level - level + 10))
 		{
-			level++;
 			exp -= (level * level - level + 10);
+			level++;
 			channel.sendMessage("You have leveled up your " + skill + " to level "+ level +"!");
 		}
 		thisSkill.remove("level");
@@ -210,6 +208,7 @@ public class Player {
 		r.write(json.toString(3));
 		r.flush();
 		r.close();
+		Player.inventoryRemove(user, item, 1);
 		channel.sendMessage("You equip the " + item + ".");
 	}
 	

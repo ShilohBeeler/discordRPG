@@ -2,8 +2,6 @@ package com.shymain.discordRPG;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
@@ -42,24 +40,13 @@ public class Input {
 		}
 		item = allArguments;
 		item = item.replaceAll(" ", "_");
-		commands:
-		if(command.equalsIgnoreCase(".help")){
-			IPrivateChannel pm = null;
-			try {
-				pm = event.getClient().getOrCreatePMChannel(event.getMessage().getAuthor());
-			} catch (Exception e) {
-				event.getMessage().getChannel().sendMessage("You managed to find a new exception. Good Job.");
-				break commands;
-			}
-			pm.sendMessage("**Floor Commands:**\n"
-					+ "*.join* if the bot didn't add you automatically.\n"
-					+ "*.inv* displays your inventory.\n"
-					+ "*.use [item]* uses said item.\n"
-					+ "*.equip [item]* equips item.\n"
-					+ "*.unequip [slot]* unequips item in slot.\n"
-					+ "*.body* lists equipped items.\n"
-					+ "*.skills* lists skills.");
-		}
+		item = item.toLowerCase();
+		if(command.equalsIgnoreCase(".info")|| command.equalsIgnoreCase(".about"))
+		{
+			event.getMessage().getChannel().sendMessage("*discordRPG* bot programmed by **Shymain**!\n"
+					+ "Version: 0.1.1\n"
+					+ "Fork me on GitHub! https://github.com/Shymain/discordRPG");
+		}	
 		else if(command.equalsIgnoreCase(".inv") || command.equalsIgnoreCase(".inventory"))
 		{
 			Player.getInventory(event);
@@ -110,8 +97,8 @@ public class Input {
 			event.getMessage().getChannel().sendMessage("*.wares* displays the purchasable item.\n"
 					+ "*.inv* will display your inventory.\n"
 					+ "*.buy [item]* will purchase the specified item.\n"
-					/*+ "*.price [item]* will show the selling price of the specified item.\n"
-					+ "*.sell [item]* will sell the specified item."*/);
+					+ "*.price [item]* will show the selling price of the specified item.\n"
+					+ "*.sell [item]* will sell the specified item.");
 		}else if(command.equalsIgnoreCase(".wares") || command.equalsIgnoreCase(".items") || command.equalsIgnoreCase(".shop"))
 		{
 			Store.displayWares(event);
@@ -167,7 +154,23 @@ public class Input {
 			}
 		}else if(command.equalsIgnoreCase(".help"))
 		{
-			event.getMessage().getChannel().sendMessage("*.join* if you are not already added to the game.");
+			IPrivateChannel pm = null;
+			try {
+				pm = event.getClient().getOrCreatePMChannel(event.getMessage().getAuthor());
+			} catch (Exception e) {
+				event.getMessage().getChannel().sendMessage("You managed to find a new exception. Good Job.");
+				return;
+			}
+			pm.sendMessage("**Floor Commands:**\n"
+					+ "*.join* if the bot didn't add you automatically.\n"
+					+ "*.inv* displays your inventory.\n"
+					+ "*.use [item]* uses said item.\n"
+					+ "*.equip [item]* equips item.\n"
+					+ "*.unequip [slot]* unequips item in slot.\n"
+					+ "*.body* lists equipped items.\n"
+					+ "*.skills* lists skills.\n"
+					+ "*.mine* mines a rock.\n"
+					+ "*.chop* cuts a tree.\n");
 		}else if(command.equalsIgnoreCase(".mine"))
 		{
 			event.getMessage().getChannel().sendMessage("You swing your pick at the rock.");
