@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.Timer;
@@ -121,6 +120,7 @@ public class DiscordRPG {
 			k.createNewFile();
 			InputStream inputStream = DiscordRPG.class.getResourceAsStream("/resources/items.json");
 			String theString = IOUtils.toString(inputStream, "UTF-8");
+			System.out.println(theString);
 			JSONObject json = new JSONObject(theString);
 			FileWriter w = new FileWriter(System.getProperty("user.home")+"/discordRPG/items.json");
 			w.write(json.toString(3));
@@ -160,7 +160,7 @@ public class DiscordRPG {
 	}
 	
 	public static void main(String[] args) throws DiscordException, JSONException, IOException{
-		IDiscordClient client = DiscordRPG.getClient("discordrpg@gmail.com", Password.getPass(), true);
+		IDiscordClient client = DiscordRPG.getClient("discordrpg+beta@gmail.com", Password.getPass(), true);
 		EventDispatcher dispatcher = client.getDispatcher();
 	    dispatcher.registerListener(new DiscordRPG());
 	    timer.schedule(ticker, 0, 1000);

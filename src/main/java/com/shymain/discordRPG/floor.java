@@ -41,7 +41,7 @@ public class Floor {
     		+ "}";
 		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
 		JSONObject floor = new JSONObject(template);
-		json.getJSONObject("floors").put("149548522058809344", floor);
+		json.getJSONObject("floors").put("157558660732682241", floor);
 		FileWriter r = new FileWriter(file);
 		r.write(json.toString(3));
 		r.flush();
