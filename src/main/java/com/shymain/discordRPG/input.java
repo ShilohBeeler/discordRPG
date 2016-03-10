@@ -18,6 +18,7 @@ public class Input {
 	public static String[] arguments;
 	public static String rawMessage;
 	public static String[] parts;
+	public static String item;
 
 	@EventSubscriber
 	public static void commands(MessageReceivedEvent event) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
@@ -34,6 +35,8 @@ public class Input {
 			allArguments = parts[1];
 			arguments = allArguments.split(" ");
 		}
+		item = allArguments;
+		item = item.replaceAll(" ", "_");
 		commands:
 		if(command.equalsIgnoreCase(".inv") || command.equalsIgnoreCase(".inventory"))
 		{
@@ -41,8 +44,13 @@ public class Input {
 		}else if(command.equalsIgnoreCase(".use"))
 		{
 			useHandling(event);
-		}	
-		else if(event.getMessage().getChannel().getID().equalsIgnoreCase("156840527164211200"))
+		}else if(command.equalsIgnoreCase(".equip")){
+			Player.equip(event.getMessage().getAuthor(), event.getMessage().getChannel(), item);
+		}else if(command.equalsIgnoreCase(".unequip")){
+			Player.unequip(event.getMessage().getAuthor(), event.getMessage().getChannel(), item);
+		}else if(command.equalsIgnoreCase(".equipment") || command.equalsIgnoreCase(".body")){
+			Player.getEquip(event.getMessage().getAuthor(), event.getMessage().getChannel());
+		}else if(event.getMessage().getChannel().getID().equalsIgnoreCase("156840527164211200"))
 		{
 			shop(event);
 		}else if(event.getMessage().getChannel().isPrivate())
@@ -122,8 +130,13 @@ public class Input {
 			event.getMessage().getChannel().sendMessage("Use what?");
 			return;
 		}
-		String item = allArguments;
-		item = item.replaceAll(" ", "_");
+		JSONObject json = new JSONObject(DiscordRPG.readFile(Player.file));
+		JSONObject player = json.getJSONObject("players").getJSONObject(event.getMessage().getAuthor().getID());
+		if(player.getJSONObject("inventory").isNull(item))
+		{
+			event.getMessage().getChannel().sendMessage("Your \"summoning items from out of nowhere\" skill is not yet at level 99. Using an item you do not possess is not possible.");
+			return;
+		}
 		if(item.equalsIgnoreCase("health_potion"))
 		{
 			event.getMessage().getChannel().sendMessage("You take a long drink of the draught. It heals five health!");

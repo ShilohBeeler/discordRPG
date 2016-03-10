@@ -189,4 +189,78 @@ public class Player {
 		r.close();
 	}
 	
+	public static void equip(IUser user, IChannel channel, String item) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
+	{
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		JSONObject player = json.getJSONObject("players").getJSONObject(user.getID());
+		String slot = "";
+		switch(item){
+		case "iron_axe":
+		case "iron_pickaxe":
+		case "sword":
+			slot = "hand";
+			break;
+		case "iron_body":
+			slot = "body";
+			break;
+		case "iron_head":
+			slot = "head";
+			break;
+		case "iron_feet":
+			slot = "feet";
+			break;
+		default:
+			channel.sendMessage("That cannot be equipped!");
+			return;
+		}
+		if(!player.getJSONObject("equipment").getString(slot).equalsIgnoreCase("empty"))
+		{
+			channel.sendMessage("You already have something equipped in your " + slot + " slot.");
+			return;
+		}
+		player.getJSONObject("equipment").remove(slot);
+		player.getJSONObject("equipment").put(slot, item);
+		FileWriter r = new FileWriter(file);
+		r.write(json.toString(3));
+		r.flush();
+		r.close();
+		channel.sendMessage("You equip the " + item + ".");
+	}
+	
+	public static void unequip(IUser user, IChannel channel, String slot) throws MissingPermissionsException, HTTP429Exception, DiscordException, JSONException, IOException
+	{
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		JSONObject player = json.getJSONObject("players").getJSONObject(user.getID());
+		if(player.getJSONObject("equipment").isNull(slot) || player.getJSONObject("equipment").getString(slot).equalsIgnoreCase("empty"))
+		{
+			channel.sendMessage("Unfortunately, you don't have anything equipped there.");
+			return;
+		}
+		String item = player.getJSONObject("equipment").getString(slot);
+		player.getJSONObject("equipment").remove(slot);
+		player.getJSONObject("equipment").put(slot, "empty");
+		FileWriter r = new FileWriter(file);
+		r.write(json.toString(3));
+		r.flush();
+		r.close();
+		Player.inventoryAdd(user, item, 1);
+		channel.sendMessage("You store the " + item + " in your inventory.");
+	}
+	
+	public static void getEquip(IUser user, IChannel channel) throws MissingPermissionsException, HTTP429Exception, DiscordException, JSONException, IOException
+	{
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		JSONObject player = json.getJSONObject("players").getJSONObject(user.getID());
+		Iterator<String> keys = player.getJSONObject("equipment").keys();
+		String output = "```\nEquipment:\n";
+		while(keys.hasNext())
+		{
+			String key = (String)keys.next();
+			String equipped = player.getJSONObject("equipment").getString(key);
+			output += key + ": " + equipped + ".\n";
+		}
+		output += "```";
+		channel.sendMessage(output);
+	}
+	
 }
