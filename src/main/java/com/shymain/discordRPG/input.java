@@ -172,6 +172,10 @@ public class Input {
 		{
 			event.getMessage().getChannel().sendMessage("You swing your pick at the rock.");
 			Floor.mineRock(event.getMessage().getAuthor(), event.getMessage().getChannel());
+		}else if(command.equalsIgnoreCase(".chop") || command.equalsIgnoreCase(".cut"))
+		{
+			event.getMessage().getChannel().sendMessage("You swing your axe at the tree.");
+			Floor.cutTree(event.getMessage().getAuthor(), event.getMessage().getChannel());
 		}
 	}
 	

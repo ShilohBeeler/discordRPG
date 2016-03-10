@@ -29,7 +29,14 @@ public class Floor {
             + "\"xp\":3,"
             + "\"refresh_time\": 60,"
             + "\"drops\":\"iron_ore\""
-            + "}"
+            + "},"
+            + "\"Tree\":{"
+            + "\"ready\":10,"
+            + "\"max\":10,"
+            + "\"xp\":2,"
+            + "\"refresh_time\": 60,"
+            + "\"drops\":\"oak_wood\""
+            + "}"            
             + "}"
     		+ "}";
 		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
@@ -95,6 +102,47 @@ public class Floor {
 		r.close();
 		channel.sendMessage("A vein reappears in one of the rocks.\n"
 				+ rock.getInt("ready") + " of " + rock.getInt("max") + " rocks now available.");
+		
+	}
+	
+	public static void cutTree(IUser user, IChannel channel) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
+	{
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		JSONObject json2 = new JSONObject(DiscordRPG.readFile(Player.file));
+		JSONObject player = json2.getJSONObject("players").getJSONObject(user.getID());
+		JSONObject floor = json.getJSONObject("floors").getJSONObject(channel.getID());
+		JSONObject tree = floor.getJSONObject("events").getJSONObject("Tree");
+		if(tree.getInt("ready")==0)
+		{
+			channel.sendMessage("All that's left of the trees is a field of stumps.");
+		}else{
+			int ready = tree.getInt("ready");
+			ready--;
+			tree.remove("ready");
+			tree.put("ready", ready);
+			FileWriter r = new FileWriter(file);
+			r.write(json.toString(3));
+			r.flush();
+			r.close();
+			Player.inventoryAdd(user, tree.getString("drops"), 1);
+			Event rockRefresh = new Event("TreeRefreshEvent", user, channel);
+			DiscordRPG.timedEvents.put(rockRefresh, tree.getInt("refresh_time"));
+			channel.sendMessage("You get some " + tree.getString("drops") + "!");
+			Player.addXP(user, channel, "woodcutting", tree.getInt("xp"));
+		}
+	}
+	
+	public static void addTree(IChannel channel) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
+	{
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		JSONObject tree = json.getJSONObject("floors").getJSONObject(channel.getID()).getJSONObject("events").getJSONObject("Tree");
+		tree.increment("ready");
+		FileWriter r = new FileWriter(file);
+		r.write(json.toString(3));
+		r.flush();
+		r.close();
+		channel.sendMessage("A tree has grown anew in the fields.\n"
+				+ tree.getInt("ready") + " of " + tree.getInt("max") + " trees now available.");
 		
 	}
 	

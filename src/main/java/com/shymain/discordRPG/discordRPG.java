@@ -52,6 +52,9 @@ public class DiscordRPG {
 		}else if(eventType.equalsIgnoreCase("RockRefreshEvent"))
 		{
 			Floor.addRock(channel);
+		}else if(eventType.equalsIgnoreCase("TreeRefreshEvent"))
+		{
+			Floor.addTree(channel);
 		}
 	}
 	

@@ -44,6 +44,11 @@
         toRemove:false,
         value:5
     },
+    oak_wood:{
+        flavor_text:"A large log of oak, freshly cut from a tree. It has numerous mesmerising rings.",
+        toRemove:false,
+        value:3
+    },
     health_potion:{
         flavor_text:"You take a long drink of the draught. It heals five health!",
         toRemove:true,

@@ -63,7 +63,7 @@ public class Monster {
 		String name = currentFights.get(user).name;
 		JSONObject json = new JSONObject(DiscordRPG.readFile(Player.file));
 		JSONObject player = json.getJSONObject("players").getJSONObject(user.getID());
-		int fighting = player.getJSONObject("stats").getInt("fighting");
+		int fighting = player.getJSONObject("stats").getJSONObject("fighting").getInt("level");
 		int playerattack = 1 + (fighting/5);
 		int playerhealth = player.getInt("health");
 		int maxplayerhealth = player.getInt("maxhealth");

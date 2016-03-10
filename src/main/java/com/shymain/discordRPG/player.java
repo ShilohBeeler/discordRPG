@@ -28,6 +28,7 @@ public class Player {
            +     "mining: { level: 1, xp: 0},"
            +     "fighting: { level: 1, xp: 0},"
            +     "magic: { level: 1, xp: 0}"
+           +     "woodcutting: { level: 1, xp: 0}"
            + "},"
            + "inventory:"
            + "{"
