@@ -159,10 +159,10 @@ public class Player {
 		int level = thisSkill.getInt("level");
 		int exp = thisSkill.getInt("xp");
 		exp += xp;
-		while(exp > (level^2 - level + 10))
+		while(exp > (level * level - level + 10))
 		{
 			level++;
-			exp -= (level^2 - level + 10);
+			exp -= (level * level - level + 10);
 			channel.sendMessage("You have leveled up your " + skill + " to level "+ level +"!");
 		}
 		thisSkill.remove("level");
@@ -260,7 +260,7 @@ public class Player {
 			String key = (String)keys.next();
 			int level = player.getJSONObject("stats").getJSONObject(key).getInt("level");
 			int xp = player.getJSONObject("stats").getJSONObject(key).getInt("xp");
-			String maxExp = Integer.toString(level^2 - level + 10);
+			String maxExp = Integer.toString(level * level - level + 10);
 			String levelS = Integer.toString(level);
 			String exp = Integer.toString(xp);
 			output += key + ": Level " + levelS + ". " + exp + "/" + maxExp + "xp to next level.\n";
