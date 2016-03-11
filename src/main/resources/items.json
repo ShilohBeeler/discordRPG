@@ -7,6 +7,7 @@
     iron_axe:{
         flavor_text:"You heft the axe in your hand, eyeing it curiously. If only there was a tree to .chop...",
         to_remove:false,
+        can_chop:true,
         value:0
     },
     iron_head:{
@@ -27,11 +28,13 @@
     sword:{
         flavor_text:"Overhand stroke! Underhand stroke! Side swipe, and lunge forward -- and promptly fall over, imbalanced. Ouch.",
         to_remove:false,
+        can_fight:true,
         value:0
     },
     iron_pickaxe:{
         flavor_text:"You swing the pickaxe as if mining a rock, and then stop, realizing how silly it looks.",
         to_remove:false,
+        can_mine:true,
         value:75
     },
     steak:{

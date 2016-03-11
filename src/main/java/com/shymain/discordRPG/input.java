@@ -95,6 +95,13 @@ public class Input {
 					+ "*.fight* either starts a battle or attacks an enemy.\n");
 		}else if(command.equalsIgnoreCase(".fight") || command.equalsIgnoreCase(".attack"))
 		{
+			String holding = Player.getSlot(event.getMessage().getAuthor(), event.getMessage().getChannel(), "hand");
+			boolean can_fight = Item.getBool(holding, "can_fight");
+			if(!can_fight)
+			{
+				event.getMessage().getChannel().sendMessage("It would be foolish to fight a monster without a weapon equipped!");
+				return;
+			}
 			if(Monster.currentFights.containsKey(event.getMessage().getAuthor()))
 			{
 				Monster.attack(event.getMessage().getAuthor(), event.getMessage().getChannel());
@@ -171,10 +178,24 @@ public class Input {
 			event.getMessage().getChannel().sendMessage("*.join* if you are not already added to the game.");
 		}else if(command.equalsIgnoreCase(".mine"))
 		{
+			String holding = Player.getSlot(event.getMessage().getAuthor(), event.getMessage().getChannel(), "hand");
+			boolean can_mine = Item.getBool(holding, "can_mine");
+			if(!can_mine)
+			{
+				event.getMessage().getChannel().sendMessage("You don't have a pickaxe equipped.");
+				return;
+			}
 			event.getMessage().getChannel().sendMessage("You swing your pick at the rock.");
 			Floor.mineRock(event.getMessage().getAuthor(), event.getMessage().getChannel());
 		}else if(command.equalsIgnoreCase(".chop") || command.equalsIgnoreCase(".cut"))
 		{
+			String holding = Player.getSlot(event.getMessage().getAuthor(), event.getMessage().getChannel(), "hand");
+			boolean can_chop = Item.getBool(holding, "can_chop");
+			if(!can_chop)
+			{
+				event.getMessage().getChannel().sendMessage("You don't have an axe equipped.");
+				return;
+			}
 			event.getMessage().getChannel().sendMessage("You swing your axe at the tree.");
 			Floor.cutTree(event.getMessage().getAuthor(), event.getMessage().getChannel());
 		}

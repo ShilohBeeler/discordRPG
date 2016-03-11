@@ -81,4 +81,36 @@ public class Item {
 		r.close();
 	}
 	
+	public static boolean getBool(String item, String field) throws JSONException, IOException
+	{
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		JSONObject items = json.getJSONObject("items");
+		if(items.getJSONObject(item).isNull(field))
+		{
+			return false;
+		}
+		return items.getJSONObject(item).getBoolean(field);
+	}
+	
+	public static String getString(String item, String field) throws JSONException, IOException
+	{
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		JSONObject items = json.getJSONObject("items");
+		if(items.getJSONObject(item).isNull(field))
+		{
+			return "";
+		}
+		return items.getJSONObject(item).getString(field);
+	}
+	
+	public static int getInt(String item, String field) throws JSONException, IOException
+	{
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		JSONObject items = json.getJSONObject("items");
+		if(items.getJSONObject(item).isNull(field))
+		{
+			return 0;
+		}
+		return items.getJSONObject(item).getInt(field);
+	}
 }

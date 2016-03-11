@@ -233,6 +233,14 @@ public class Player {
 		channel.sendMessage("You store the " + item + " in your inventory.");
 	}
 	
+	public static String getSlot(IUser user, IChannel channel, String slot) throws MissingPermissionsException, HTTP429Exception, DiscordException, JSONException, IOException
+	{
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		JSONObject player = json.getJSONObject("players").getJSONObject(user.getID());
+		String item = player.getJSONObject("inventory").getString(slot);
+		return item;
+	}
+	
 	public static void getEquip(IUser user, IChannel channel) throws MissingPermissionsException, HTTP429Exception, DiscordException, JSONException, IOException
 	{
 		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
