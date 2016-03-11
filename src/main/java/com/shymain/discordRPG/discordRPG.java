@@ -58,6 +58,9 @@ public class DiscordRPG {
 		}else if(eventType.equalsIgnoreCase("TreeRefreshEvent"))
 		{
 			Floor.addTree(channel);
+		}else if(eventType.equalsIgnoreCase("WeatherTestEvent"))
+		{
+			Ambient.weatherTest(channel);
 		}
 	}
 	
@@ -69,7 +72,7 @@ public class DiscordRPG {
 			String blank = "Testing";
 		    Optional<String> game = Optional.<String>of(blank);
 		    event.getClient().updatePresence(false, game);
-		
+		Ambient.initialize(event);
 		File f = new File(System.getProperty("user.home")+"/discordRPG");
 		if(!f.exists())
 		{
