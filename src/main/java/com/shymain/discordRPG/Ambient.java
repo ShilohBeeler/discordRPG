@@ -44,6 +44,7 @@ public class Ambient {
 			channel.sendMessage(changeMessage);
 		}
 		Event weatherCycle = new Event("WeatherTestEvent", null, channel);
+		DiscordRPG.timedEvents.put(weatherCycle, 60);
 	}
 
 }
