@@ -40,7 +40,7 @@ public class Player {
            +     "head: \"iron_head\","
            +     "body: \"iron_body\","
            +     "feet: \"iron_feet\","
-           +     "weapon: \"sword\""
+           +     "hand: \"sword\""
            + "},"
            + "rank: 1,"
            + "health: 10,"
@@ -237,7 +237,7 @@ public class Player {
 	{
 		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
 		JSONObject player = json.getJSONObject("players").getJSONObject(user.getID());
-		String item = player.getJSONObject("inventory").getString(slot);
+		String item = player.getJSONObject("equipment").getString(slot);
 		return item;
 	}
 	
