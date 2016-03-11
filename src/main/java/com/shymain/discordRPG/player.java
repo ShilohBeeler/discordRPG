@@ -1,6 +1,5 @@
 package com.shymain.discordRPG;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
@@ -11,7 +10,6 @@ import org.json.JSONObject;
 import sx.blah.discord.api.DiscordException;
 import sx.blah.discord.api.MissingPermissionsException;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
-import sx.blah.discord.handle.impl.events.UserJoinEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.HTTP429Exception;
@@ -120,13 +118,12 @@ public class Player {
 	{
 		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
 		JSONObject player = json.getJSONObject("players").getJSONObject(event.getMessage().getAuthor().getID());
-		Iterator<String> keys = player.getJSONObject("inventory").keys();
+		Iterator<?> keys = player.getJSONObject("inventory").keys();
 		String output = "```\nInventory:\n";
 		while(keys.hasNext())
 		{
 			String key = (String)keys.next();
 			int number = player.getJSONObject("inventory").getInt(key);
-			String numbers = Integer.toString(number);
 			output += key + ": " + number + ".\n";
 		}
 		output += "```";
@@ -241,11 +238,19 @@ public class Player {
 		return item;
 	}
 	
+	public static int getSkill(IUser user, String skill) throws JSONException, IOException
+	{
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		JSONObject player = json.getJSONObject("players").getJSONObject(user.getID());
+		int skill_level = player.getJSONObject("stats").getJSONObject(skill).getInt("level");
+		return skill_level;
+	}
+	
 	public static void getEquip(IUser user, IChannel channel) throws MissingPermissionsException, HTTP429Exception, DiscordException, JSONException, IOException
 	{
 		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
 		JSONObject player = json.getJSONObject("players").getJSONObject(user.getID());
-		Iterator<String> keys = player.getJSONObject("equipment").keys();
+		Iterator<?> keys = player.getJSONObject("equipment").keys();
 		String output = "```\nEquipment:\n";
 		while(keys.hasNext())
 		{
@@ -261,7 +266,7 @@ public class Player {
 	{
 		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
 		JSONObject player = json.getJSONObject("players").getJSONObject(user.getID());
-		Iterator<String> keys = player.getJSONObject("stats").keys();
+		Iterator<?> keys = player.getJSONObject("stats").keys();
 		String output = "```\nSkills:\n";
 		while(keys.hasNext())
 		{

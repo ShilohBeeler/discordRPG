@@ -137,19 +137,7 @@ public class DiscordRPG {
 	@EventSubscriber
 	public static void testMessages(MessageReceivedEvent event) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
 	{
-		String command;
-		String allArguments = "";
-		String[] arguments = null;
-		
-		String rawMessage = event.getMessage().getContent();
-		
-		String parts[] = rawMessage.split(" ", 2);
-		command = parts[0];
-		if(parts.length == 2)
-		{
-			allArguments = parts[1];
-			arguments = allArguments.split(" ");
-		}
+		if(event.getMessage().getContent().startsWith("."))
 		Input.commands(event);
 	}
 
