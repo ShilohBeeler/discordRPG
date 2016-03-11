@@ -41,7 +41,7 @@ public class Floor {
     		+ "}";
 		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
 		JSONObject floor = new JSONObject(template);
-		json.getJSONObject("floors").put("149548522058809344", floor);
+		json.getJSONObject("floors").put("157558660732682241", floor);
 		FileWriter r = new FileWriter(file);
 		r.write(json.toString(3));
 		r.flush();
@@ -125,8 +125,13 @@ public class Floor {
 			r.flush();
 			r.close();
 			Player.inventoryAdd(user, tree.getString("drops"), 1);
-			Event rockRefresh = new Event("TreeRefreshEvent", user, channel);
-			DiscordRPG.timedEvents.put(rockRefresh, tree.getInt("refresh_time"));
+			Event treeRefresh = new Event("TreeRefreshEvent", user, channel);
+			int refresh_time = tree.getInt("refresh_time");
+			if(Ambient.weather.equalsIgnoreCase("rain"))
+			{
+				refresh_time /= 2;
+			}
+			DiscordRPG.timedEvents.put(treeRefresh, refresh_time);
 			channel.sendMessage("You get some " + tree.getString("drops") + "!");
 			Player.addXP(user, channel, "woodcutting", tree.getInt("xp"));
 		}

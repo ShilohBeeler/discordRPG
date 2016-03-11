@@ -40,7 +40,7 @@ public class Player {
            +     "head: \"iron_head\","
            +     "body: \"iron_body\","
            +     "feet: \"iron_feet\","
-           +     "weapon: \"sword\""
+           +     "hand: \"sword\""
            + "},"
            + "rank: 1,"
            + "health: 10,"
@@ -231,6 +231,14 @@ public class Player {
 		r.close();
 		Player.inventoryAdd(user, item, 1);
 		channel.sendMessage("You store the " + item + " in your inventory.");
+	}
+	
+	public static String getSlot(IUser user, IChannel channel, String slot) throws MissingPermissionsException, HTTP429Exception, DiscordException, JSONException, IOException
+	{
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		JSONObject player = json.getJSONObject("players").getJSONObject(user.getID());
+		String item = player.getJSONObject("equipment").getString(slot);
+		return item;
 	}
 	
 	public static void getEquip(IUser user, IChannel channel) throws MissingPermissionsException, HTTP429Exception, DiscordException, JSONException, IOException

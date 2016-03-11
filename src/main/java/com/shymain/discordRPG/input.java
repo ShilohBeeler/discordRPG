@@ -2,8 +2,6 @@ package com.shymain.discordRPG;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
@@ -74,13 +72,16 @@ public class Input {
 			Player.getEquip(event.getMessage().getAuthor(), event.getMessage().getChannel());
 		}else if(command.equalsIgnoreCase(".skills") || command.equalsIgnoreCase(".stats")){
 			Player.getSkills(event.getMessage().getAuthor(), event.getMessage().getChannel());
-		}else if(event.getMessage().getChannel().getID().equalsIgnoreCase("156840527164211200"))
+		}else if(event.getMessage().getChannel().getID().equalsIgnoreCase("157558822842531840"))
 		{
 			shop(event);
+		}else if(event.getMessage().getChannel().getID().equalsIgnoreCase("157564348263432192"))
+		{
+			admin(event);
 		}else if(event.getMessage().getChannel().isPrivate())
 			{
 			privateChannels(event);
-		}else if(event.getMessage().getChannel().getGuild().getID().equalsIgnoreCase("149548522058809344"))
+		}else if(event.getMessage().getChannel().getGuild().getID().equalsIgnoreCase("157558660732682241"))
 		{
 			floorCommands(event);
 		}
@@ -94,6 +95,13 @@ public class Input {
 					+ "*.fight* either starts a battle or attacks an enemy.\n");
 		}else if(command.equalsIgnoreCase(".fight") || command.equalsIgnoreCase(".attack"))
 		{
+			String holding = Player.getSlot(event.getMessage().getAuthor(), event.getMessage().getChannel(), "hand");
+			boolean can_fight = Item.getBool(holding, "can_fight");
+			if(!can_fight)
+			{
+				event.getMessage().getChannel().sendMessage("It would be foolish to fight a monster without a weapon equipped!");
+				return;
+			}
 			if(Monster.currentFights.containsKey(event.getMessage().getAuthor()))
 			{
 				Monster.attack(event.getMessage().getAuthor(), event.getMessage().getChannel());
@@ -170,10 +178,24 @@ public class Input {
 			event.getMessage().getChannel().sendMessage("*.join* if you are not already added to the game.");
 		}else if(command.equalsIgnoreCase(".mine"))
 		{
+			String holding = Player.getSlot(event.getMessage().getAuthor(), event.getMessage().getChannel(), "hand");
+			boolean can_mine = Item.getBool(holding, "can_mine");
+			if(!can_mine)
+			{
+				event.getMessage().getChannel().sendMessage("You don't have a pickaxe equipped.");
+				return;
+			}
 			event.getMessage().getChannel().sendMessage("You swing your pick at the rock.");
 			Floor.mineRock(event.getMessage().getAuthor(), event.getMessage().getChannel());
 		}else if(command.equalsIgnoreCase(".chop") || command.equalsIgnoreCase(".cut"))
 		{
+			String holding = Player.getSlot(event.getMessage().getAuthor(), event.getMessage().getChannel(), "hand");
+			boolean can_chop = Item.getBool(holding, "can_chop");
+			if(!can_chop)
+			{
+				event.getMessage().getChannel().sendMessage("You don't have an axe equipped.");
+				return;
+			}
 			event.getMessage().getChannel().sendMessage("You swing your axe at the tree.");
 			Floor.cutTree(event.getMessage().getAuthor(), event.getMessage().getChannel());
 		}
@@ -186,10 +208,8 @@ public class Input {
 			event.getMessage().getChannel().sendMessage("Use what?");
 			return;
 		}
-		ClassLoader classLoader = Input.class.getClassLoader();
-		File iFile = new File(classLoader.getResource("items.json").getFile());
 		JSONObject json = new JSONObject(DiscordRPG.readFile(Player.file));
-		JSONObject json2 = new JSONObject(DiscordRPG.readFile(iFile.getAbsolutePath()));
+		JSONObject json2 = new JSONObject(DiscordRPG.readFile(Item.file));
 		JSONObject items = json2.getJSONObject("items");
 		JSONObject player = json.getJSONObject("players").getJSONObject(event.getMessage().getAuthor().getID());
 		if(player.getJSONObject("inventory").isNull(item))
@@ -204,7 +224,7 @@ public class Input {
 		}
 		
 		event.getMessage().getChannel().sendMessage(items.getJSONObject(item).getString("flavor_text"));
-		if(items.getJSONObject(item).getBoolean("toRemove"))
+		if(items.getJSONObject(item).getBoolean("to_remove"))
 		{
 			Player.inventoryRemove(event.getMessage().getAuthor(), item, 1);
 		}
@@ -214,4 +234,30 @@ public class Input {
 		}
 	}
 	
+	public static void admin(MessageReceivedEvent event) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
+	{
+		if(command.equalsIgnoreCase(".item"))
+		{
+			if(allArguments.length()<2)
+			{
+				return;
+			}
+			String[] moreSplitting = allArguments.split(" ", 2);
+			String[] split = allArguments.split(" ", 4);
+			String subcommand = moreSplitting[0];
+			String allArgs = moreSplitting[1];
+			allArgs = allArgs.toLowerCase();
+			allArgs = allArgs.replace(" ", "_");
+			if(subcommand.equalsIgnoreCase("create"))
+			{
+				Item.create(event.getMessage().getAuthor(), event.getMessage().getChannel(), allArgs);
+			}else if(subcommand.equalsIgnoreCase("edit"))
+			{
+				Item.value(event.getMessage().getAuthor(), event.getMessage().getChannel(), split[1], split[2], split[3]);
+			}else if(subcommand.equalsIgnoreCase("remove"))
+			{
+				Item.remove(event.getMessage().getAuthor(), event.getMessage().getChannel(), allArgs);
+			}
+		}
+	}
 }
