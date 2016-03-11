@@ -32,6 +32,7 @@ public class Item {
 		r.write(json.toString(3));
 		r.flush();
 		r.close();
+		channel.sendMessage("👌");
 	}
 	
 	public static void value(IUser user, IChannel channel, String item, String key, String value) throws IOException, MissingPermissionsException, HTTP429Exception, DiscordException
@@ -63,6 +64,7 @@ public class Item {
 		r.write(json.toString(3));
 		r.flush();
 		r.close();
+		channel.sendMessage("👌");
 	}
 	
 	public static void remove(IUser user, IChannel channel, String item) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
@@ -79,6 +81,7 @@ public class Item {
 		r.write(json.toString(3));
 		r.flush();
 		r.close();
+		channel.sendMessage("👌");
 	}
 	
 	public static boolean getBool(String item, String field) throws JSONException, IOException

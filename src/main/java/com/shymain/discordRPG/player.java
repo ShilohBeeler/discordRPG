@@ -258,6 +258,10 @@ public class Player {
 			String equipped = player.getJSONObject("equipment").getString(key);
 			output += key + ": " + equipped + ".\n";
 		}
+		String health = Integer.toString(player.getInt("health"));
+		String maxhealth = Integer.toString(player.getInt("maxhealth"));
+		String healthprint = "Health: " + health + "/" + maxhealth + ".\n";
+		output += healthprint;
 		output += "```";
 		channel.sendMessage(output);
 	}
