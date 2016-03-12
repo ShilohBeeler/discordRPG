@@ -25,7 +25,7 @@ public class Player {
            + "{"
            +     "mining: { level: 1, xp: 0},"
            +     "fighting: { level: 1, xp: 0},"
-           +     "magic: { level: 1, xp: 0}"
+           +     "magic: { level: 1, xp: 0},"
            +     "woodcutting: { level: 1, xp: 0}"
            + "},"
            + "inventory:"
@@ -207,6 +207,7 @@ public class Player {
 		r.write(json.toString(3));
 		r.flush();
 		r.close();
+		Player.inventoryRemove(user, item, 1);
 		channel.sendMessage("You equip the " + item + ".");
 	}
 	

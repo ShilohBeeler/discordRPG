@@ -253,6 +253,9 @@ public class Input {
 			}else if(resplit.length>1)
 			{
 				String args = resplit[1];
+				String id = args;
+				id = id.replace("<@", "");
+				id = id.replace(">", "");
 				String[] test = args.split(" ");
 				int k = test.length;
 				int number = 0;
@@ -272,12 +275,12 @@ public class Input {
 				}
 				else
 			    {
-			    	theitem = item;
+			    	theitem = args.replace(" ", "_");
 			    	number = 1;
 			    }
 				if(subcommand.equalsIgnoreCase("open"))
 				{
-					Trade.open(event.getMessage().getChannel(), event.getMessage().getAuthor(), event.getMessage().getChannel().getGuild().getUserByID(args));
+					Trade.open(event.getMessage().getChannel(), event.getMessage().getAuthor(), event.getMessage().getChannel().getGuild().getUserByID(id));
 				}else if(subcommand.equalsIgnoreCase("add"))
 				{
 					Trade.add(event.getMessage().getChannel(), event.getMessage().getAuthor(), theitem, number);

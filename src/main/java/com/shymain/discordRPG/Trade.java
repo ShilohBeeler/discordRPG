@@ -16,7 +16,7 @@ import sx.blah.discord.util.HTTP429Exception;
 
 public class Trade {
 	
-	public static HashMap<String, String> openTrades;
+	public static HashMap<String, String> openTrades = new HashMap<String, String>();
 	public static String file = System.getProperty("user.home")+"/discordRPG/trades.json";
 
 	public static void open(IChannel channel, IUser user, IUser recipient) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
@@ -34,7 +34,7 @@ public class Trade {
 		String template = ""
 				+ "{"
 				+ "trade_accepted:false,"
-				+ "recipient:" + recipient + ","
+				+ "recipient: \"" + recipient.getID().toString() + "\","
 				+ "user1:" + user.getName() + ","
 				+ "user1_inventory:{},"
 				+ "user2:" + recipient.getName() + ","
@@ -48,11 +48,15 @@ public class Trade {
 		openTrades.put(recipient.getID(), user.getID());
 		trades.put(user.getID(), trade);
 		channel.sendMessage(recipient.mention() + ": " + user.mention() + " has offered to trade! Please either .trade accept or .trade reject this offer.");
+		FileWriter r = new FileWriter(file);
+		r.write(json.toString(3));
+		r.flush();
+		r.close();
 	}
 	
 	public static void accept(IChannel channel, IUser recipient) throws MissingPermissionsException, HTTP429Exception, DiscordException, JSONException, IOException
 	{
-		if(!openTrades.containsKey(recipient))
+		if(!openTrades.containsKey(recipient.getID()) && !openTrades.containsValue(recipient.getID()))
 		{
 			channel.sendMessage("No one has requested to trade with you!");
 			return;
@@ -81,7 +85,7 @@ public class Trade {
 	
 	public static void reject(IChannel channel, IUser recipient) throws MissingPermissionsException, HTTP429Exception, DiscordException, JSONException, IOException
 	{
-		if(!openTrades.containsKey(recipient))
+		if(!openTrades.containsKey(recipient.getID()) && !openTrades.containsValue(recipient.getID()))
 		{
 			channel.sendMessage("No one has requested to trade with you!");
 			return;
@@ -123,6 +127,7 @@ public class Trade {
 		if(trade.getBoolean("trade_close"))
 		{
 			channel.sendMessage("Please either .trade confirm or .trade cancel!");
+			return;
 		}
 		if(!trades.getJSONObject(id).getBoolean("trade_accepted"))
 		{
@@ -193,6 +198,7 @@ public class Trade {
 		if(trade.getBoolean("trade_close"))
 		{
 			channel.sendMessage("Please either .trade confirm or .trade cancel!");
+			return;
 		}
 		if(!trades.getJSONObject(id).getBoolean("trade_accepted"))
 		{
@@ -274,6 +280,7 @@ public class Trade {
 			Player.inventoryAdd(recipient, key, number);
 		}
 		trades.remove(id);
+		openTrades.remove(recipient.getID());
 		FileWriter r = new FileWriter(file);
 		r.write(json.toString(3));
 		r.flush();
@@ -306,6 +313,11 @@ public class Trade {
 			trade.put("trade_close", true);
 			trade.remove("first_close");
 			trade.put("first_close", user.getID());
+			channel.sendMessage(user.mention() + " has confirmed the trade.");
+			FileWriter r = new FileWriter(file);
+			r.write(json.toString(3));
+			r.flush();
+			r.close();
 		}else if(trade.getString("first_close").equalsIgnoreCase(user.getID())){
 			channel.sendMessage("You have already confirmed.");
 		}
@@ -321,7 +333,7 @@ public class Trade {
 			Iterator<?> keys2 = trade.getJSONObject("user2_inventory").keys();
 			while(keys2.hasNext())
 			{
-				String key = (String)keys.next();
+				String key = (String)keys2.next();
 				int number = trade.getJSONObject("user2_inventory").getInt(key);
 				Player.inventoryAdd(user1, key, number);
 			}
@@ -331,14 +343,25 @@ public class Trade {
 			r.flush();
 			r.close();
 			channel.sendMessage("Trade complete!");
+			openTrades.remove(recipient.getID());
 		}
 	}
 
 	public static void display(IChannel channel, IUser user) throws MissingPermissionsException, HTTP429Exception, DiscordException, JSONException, IOException
 	{
+		if(!openTrades.containsKey(user.getID()) && !openTrades.containsValue(user.getID()))
+		{
+			channel.sendMessage("You are not in a trade!");
+			return;
+		}
 		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
 		JSONObject json2 = new JSONObject(DiscordRPG.readFile(Item.file));
-		JSONObject trade = json.getJSONObject("trades").getJSONObject(user.getID());
+		String id = user.getID();
+		if(openTrades.containsKey(user.getID()))
+		{
+			id = openTrades.get(user.getID());
+		}
+		JSONObject trade = json.getJSONObject("trades").getJSONObject(id);
 		JSONObject items = json2.getJSONObject("items");
 		Iterator<?> keys = trade.getJSONObject("user1_inventory").keys();
 		String inventory1 = " offers:\n";
@@ -355,10 +378,10 @@ public class Trade {
 		int value2 = 0;
 		while(keys2.hasNext())
 		{
-			String key = (String)keys.next();
+			String key = (String)keys2.next();
 			int number = trade.getJSONObject("user2_inventory").getInt(key);
 			value2 = value2 + (items.getJSONObject(key).getInt("value")*number);
-			inventory1 += key + ": " + number + ".\n";
+			inventory2 += key + ": " + number + ".\n";
 		}
 		String name1 = trade.getString("user1");
 		String name2 = trade.getString("user2");
