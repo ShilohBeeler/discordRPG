@@ -147,6 +147,14 @@ public class DiscordRPG {
 	@EventSubscriber
 	public static void testMessages(MessageReceivedEvent event) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
 	{
+		JSONObject json = new JSONObject(readFile(Player.file));
+		JSONObject player = json.getJSONObject("players");
+		if(player.isNull(event.getMessage().getAuthor().getID()))
+		{
+			Player.create(event.getMessage().getAuthor());
+			event.getMessage().getChannel().sendMessage("A new traveler arrives, sword in hand.\n"
+				+ event.getMessage().getAuthor().mention() + ": Many functions take place via DM. Use .help anywhere in DM or this server to see commands available there.");
+		}
 		if(event.getMessage().getContent().startsWith("."))
 		Input.commands(event);
 	}
@@ -156,7 +164,7 @@ public class DiscordRPG {
 	{
 		Player.create(event.getUser());
 		event.getGuild().getChannels().get(0).sendMessage("A new traveler arrives, sword in hand.\n"
-				+ event.getUser().mention() + ": Most functions take place via DM. Use .help anywhere in DM or this server to see commands available there.");
+				+ event.getUser().mention() + ": Many functions take place via DM. Use .help anywhere in DM or this server to see commands available there.");
 		
 	}
 	

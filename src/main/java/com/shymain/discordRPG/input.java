@@ -131,11 +131,7 @@ public class Input {
 	
 	public static void privateChannels(MessageReceivedEvent event) throws MissingPermissionsException, HTTP429Exception, DiscordException, JSONException, IOException
 	{
-		if(command.equalsIgnoreCase(".help"))
-		{
-			event.getMessage().getChannel().sendMessage("PM Commands:\n"
-					+ "*.fight* either starts a battle or attacks an enemy.\n");
-		}else if(command.equalsIgnoreCase(".fight") || command.equalsIgnoreCase(".attack"))
+		if(command.equalsIgnoreCase(".fight") || command.equalsIgnoreCase(".attack"))
 		{
 			String holding = Player.getSlot(event.getMessage().getAuthor(), event.getMessage().getChannel(), "hand");
 			boolean can_fight = Item.getBool(holding, "can_fight");
@@ -208,9 +204,6 @@ public class Input {
 			}else{
 				event.getMessage().getChannel().sendMessage("You are already in the system!");
 			}
-		}else if(command.equalsIgnoreCase(".help"))
-		{
-			event.getMessage().getChannel().sendMessage("*.join* if you are not already added to the game.");
 		}else if(command.equalsIgnoreCase(".mine"))
 		{
 			String holding = Player.getSlot(event.getMessage().getAuthor(), event.getMessage().getChannel(), "hand");
