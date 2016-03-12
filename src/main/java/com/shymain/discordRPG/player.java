@@ -158,8 +158,8 @@ public class Player {
 		exp += xp;
 		while(exp > (level * level - level + 10))
 		{
-			level++;
 			exp -= (level * level - level + 10);
+			level++;
 			channel.sendMessage("You have leveled up your " + skill + " to level "+ level +"!");
 		}
 		thisSkill.remove("level");

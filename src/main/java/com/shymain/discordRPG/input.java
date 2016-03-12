@@ -39,9 +39,20 @@ public class Input {
 		}
 		item = allArguments;
 		item = item.replaceAll(" ", "_");
+<<<<<<< HEAD
 		if(command.equalsIgnoreCase(".help")){
 			help(event);
 		}else if(command.equalsIgnoreCase(".inv") || command.equalsIgnoreCase(".inventory"))
+=======
+		item = item.toLowerCase();
+		if(command.equalsIgnoreCase(".info")|| command.equalsIgnoreCase(".about"))
+		{
+			event.getMessage().getChannel().sendMessage("*discordRPG* bot programmed by **Shymain**!\n"
+					+ "Version: 0.1.1\n"
+					+ "Fork me on GitHub! https://github.com/Shymain/discordRPG");
+		}	
+		else if(command.equalsIgnoreCase(".inv") || command.equalsIgnoreCase(".inventory"))
+>>>>>>> master
 		{
 			Player.getInventory(event);
 		}else if(command.equalsIgnoreCase(".use"))
@@ -151,7 +162,18 @@ public class Input {
 	
 	public static void shop(MessageReceivedEvent event) throws MissingPermissionsException, HTTP429Exception, DiscordException, JSONException, IOException
 	{
+<<<<<<< HEAD
 		if(command.equalsIgnoreCase(".wares") || command.equalsIgnoreCase(".items") || command.equalsIgnoreCase(".shop"))
+=======
+		if(command.equalsIgnoreCase(".help"))
+		{
+			event.getMessage().getChannel().sendMessage("*.wares* displays the purchasable item.\n"
+					+ "*.inv* will display your inventory.\n"
+					+ "*.buy [item]* will purchase the specified item.\n"
+					+ "*.price [item]* will show the selling price of the specified item.\n"
+					+ "*.sell [item]* will sell the specified item.");
+		}else if(command.equalsIgnoreCase(".wares") || command.equalsIgnoreCase(".items") || command.equalsIgnoreCase(".shop"))
+>>>>>>> master
 		{
 			Store.displayWares(event);
 		}else if(command.equalsIgnoreCase(".buy"))
@@ -204,6 +226,28 @@ public class Input {
 			}else{
 				event.getMessage().getChannel().sendMessage("You are already in the system!");
 			}
+<<<<<<< HEAD
+=======
+		}else if(command.equalsIgnoreCase(".help"))
+		{
+			IPrivateChannel pm = null;
+			try {
+				pm = event.getClient().getOrCreatePMChannel(event.getMessage().getAuthor());
+			} catch (Exception e) {
+				event.getMessage().getChannel().sendMessage("You managed to find a new exception. Good Job.");
+				return;
+			}
+			pm.sendMessage("**Floor Commands:**\n"
+					+ "*.join* if the bot didn't add you automatically.\n"
+					+ "*.inv* displays your inventory.\n"
+					+ "*.use [item]* uses said item.\n"
+					+ "*.equip [item]* equips item.\n"
+					+ "*.unequip [slot]* unequips item in slot.\n"
+					+ "*.body* lists equipped items.\n"
+					+ "*.skills* lists skills.\n"
+					+ "*.mine* mines a rock.\n"
+					+ "*.chop* cuts a tree.\n");
+>>>>>>> master
 		}else if(command.equalsIgnoreCase(".mine"))
 		{
 			String holding = Player.getSlot(event.getMessage().getAuthor(), event.getMessage().getChannel(), "hand");
