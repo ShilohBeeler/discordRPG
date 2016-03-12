@@ -39,20 +39,17 @@ public class Input {
 		}
 		item = allArguments;
 		item = item.replaceAll(" ", "_");
-<<<<<<< HEAD
 		if(command.equalsIgnoreCase(".help")){
 			help(event);
 		}else if(command.equalsIgnoreCase(".inv") || command.equalsIgnoreCase(".inventory"))
-=======
 		item = item.toLowerCase();
 		if(command.equalsIgnoreCase(".info")|| command.equalsIgnoreCase(".about"))
 		{
 			event.getMessage().getChannel().sendMessage("*discordRPG* bot programmed by **Shymain**!\n"
-					+ "Version: 0.1.1\n"
+					+ "Version: 0.2\n"
 					+ "Fork me on GitHub! https://github.com/Shymain/discordRPG");
 		}	
 		else if(command.equalsIgnoreCase(".inv") || command.equalsIgnoreCase(".inventory"))
->>>>>>> master
 		{
 			Player.getInventory(event);
 		}else if(command.equalsIgnoreCase(".use"))
@@ -66,16 +63,16 @@ public class Input {
 			Player.getEquip(event.getMessage().getAuthor(), event.getMessage().getChannel());
 		}else if(command.equalsIgnoreCase(".skills") || command.equalsIgnoreCase(".stats")){
 			Player.getSkills(event.getMessage().getAuthor(), event.getMessage().getChannel());
-		}else if(event.getMessage().getChannel().getID().equalsIgnoreCase("157558822842531840"))
+		}else if(event.getMessage().getChannel().getID().equalsIgnoreCase("156840527164211200"))
 		{
 			shop(event);
-		}else if(event.getMessage().getChannel().getID().equalsIgnoreCase("157564348263432192"))
+		}else if(event.getMessage().getChannel().getID().equalsIgnoreCase("158113040838033408"))
 		{
 			admin(event);
 		}else if(event.getMessage().getChannel().isPrivate())
 			{
 			privateChannels(event);
-		}else if(event.getMessage().getChannel().getGuild().getID().equalsIgnoreCase("157558660732682241"))
+		}else if(event.getMessage().getChannel().getGuild().getID().equalsIgnoreCase("149548522058809344"))
 		{
 			floorCommands(event);
 		}
@@ -162,9 +159,7 @@ public class Input {
 	
 	public static void shop(MessageReceivedEvent event) throws MissingPermissionsException, HTTP429Exception, DiscordException, JSONException, IOException
 	{
-<<<<<<< HEAD
 		if(command.equalsIgnoreCase(".wares") || command.equalsIgnoreCase(".items") || command.equalsIgnoreCase(".shop"))
-=======
 		if(command.equalsIgnoreCase(".help"))
 		{
 			event.getMessage().getChannel().sendMessage("*.wares* displays the purchasable item.\n"
@@ -173,7 +168,6 @@ public class Input {
 					+ "*.price [item]* will show the selling price of the specified item.\n"
 					+ "*.sell [item]* will sell the specified item.");
 		}else if(command.equalsIgnoreCase(".wares") || command.equalsIgnoreCase(".items") || command.equalsIgnoreCase(".shop"))
->>>>>>> master
 		{
 			Store.displayWares(event);
 		}else if(command.equalsIgnoreCase(".buy"))
@@ -226,8 +220,6 @@ public class Input {
 			}else{
 				event.getMessage().getChannel().sendMessage("You are already in the system!");
 			}
-<<<<<<< HEAD
-=======
 		}else if(command.equalsIgnoreCase(".help"))
 		{
 			IPrivateChannel pm = null;
@@ -247,7 +239,6 @@ public class Input {
 					+ "*.skills* lists skills.\n"
 					+ "*.mine* mines a rock.\n"
 					+ "*.chop* cuts a tree.\n");
->>>>>>> master
 		}else if(command.equalsIgnoreCase(".mine"))
 		{
 			String holding = Player.getSlot(event.getMessage().getAuthor(), event.getMessage().getChannel(), "hand");

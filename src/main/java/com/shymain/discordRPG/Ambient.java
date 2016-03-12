@@ -15,7 +15,10 @@ public class Ambient {
 	public static void initialize(ReadyEvent event)
 	{
 		weather = "clear";
-		IChannel channel = event.getClient().getGuildByID("157558660732682241").getChannels().get(0);
+		IChannel channel = event.getClient()
+				.getGuildByID("149548522058809344")
+				.getChannels()
+				.get(0);
 		Event weatherCycle = new Event("WeatherTestEvent", null, channel);
 		DiscordRPG.timedEvents.put(weatherCycle, 60);
 	}

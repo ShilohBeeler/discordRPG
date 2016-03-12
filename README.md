@@ -1,4 +1,4 @@
-# discordRPG v0.1
+# discordRPG v0.2
 RPG for Discord.
 
 This project is essentially supposed to create a text-based MMORPG-style game (specifically taking inspiration from aspects of Runescape), playable by any and all.

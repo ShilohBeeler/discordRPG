@@ -147,7 +147,6 @@ public class DiscordRPG {
 	@EventSubscriber
 	public static void testMessages(MessageReceivedEvent event) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
 	{
-<<<<<<< HEAD
 		JSONObject json = new JSONObject(readFile(Player.file));
 		JSONObject player = json.getJSONObject("players");
 		if(player.isNull(event.getMessage().getAuthor().getID()))
@@ -157,9 +156,7 @@ public class DiscordRPG {
 				+ event.getMessage().getAuthor().mention() + ": Many functions take place via DM. Use .help anywhere in DM or this server to see commands available there.");
 		}
 		if(event.getMessage().getContent().startsWith("."))
-=======
->>>>>>> master
-		Input.commands(event);
+			Input.commands(event);
 	}
 
 	@EventSubscriber
@@ -172,7 +169,7 @@ public class DiscordRPG {
 	}
 	
 	public static void main(String[] args) throws DiscordException, JSONException, IOException{
-		IDiscordClient client = DiscordRPG.getClient("discordrpg+beta@gmail.com", Password.getPass(), true);
+		IDiscordClient client = DiscordRPG.getClient("discordrpg@gmail.com", Password.getPass(), true);
 		EventDispatcher dispatcher = client.getDispatcher();
 	    dispatcher.registerListener(new DiscordRPG());
 	    timer.schedule(ticker, 0, 1000);
