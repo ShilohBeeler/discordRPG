@@ -41,7 +41,7 @@ public class Floor {
     		+ "}";
 		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
 		JSONObject floor = new JSONObject(template);
-		json.getJSONObject("floors").put("157558660732682241", floor);
+		json.getJSONObject("floors").put("149548522058809344", floor);
 		FileWriter r = new FileWriter(file);
 		r.write(json.toString(3));
 		r.flush();
@@ -72,7 +72,7 @@ public class Floor {
 		int dropNo = 1;
 		if(rock.getInt("ready")==0)
 		{
-			channel.sendMessage("But there was no ore left.");
+			channel.sendMessage("You swing your pick at the rock.\nBut there was no ore left.");
 		}else{
 			int ready = rock.getInt("ready");
 			ready--;
@@ -90,7 +90,7 @@ public class Floor {
 			Player.inventoryAdd(user, rock.getString("drops"), dropNo);
 			Event rockRefresh = new Event("RockRefreshEvent", user, channel);
 			DiscordRPG.timedEvents.put(rockRefresh, rock.getInt("refresh_time"));
-			channel.sendMessage("You get " + dropNo + " " + rock.getString("drops") + "!");
+			channel.sendMessage("You swing your pick at the rock.\nYou get " + dropNo + " " + rock.getString("drops") + "!");
 			Player.addXP(user, channel, "mining", rock.getInt("xp"));
 		}
 	}
@@ -117,7 +117,7 @@ public class Floor {
 		int dropNo = 1;
 		if(tree.getInt("ready")==0)
 		{
-			channel.sendMessage("All that's left of the trees is a field of stumps.");
+			channel.sendMessage("You swing your axe at the tree.\nAll that's left of the trees is a field of stumps.");
 		}else{
 			int ready = tree.getInt("ready");
 			ready--;
@@ -140,7 +140,7 @@ public class Floor {
 				refresh_time /= 2;
 			}
 			DiscordRPG.timedEvents.put(treeRefresh, refresh_time);
-			channel.sendMessage("You get " + dropNo + " " + tree.getString("drops") + "!");
+			channel.sendMessage("You swing your axe at the tree.\nYou get " + dropNo + " " + tree.getString("drops") + "!");
 			Player.addXP(user, channel, "woodcutting", tree.getInt("xp"));
 		}
 	}

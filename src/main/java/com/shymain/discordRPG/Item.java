@@ -116,4 +116,17 @@ public class Item {
 		}
 		return items.getJSONObject(item).getInt(field);
 	}
+
+	public static void give(IUser user, IChannel channel, String item) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
+	{
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		JSONObject items = json.getJSONObject("items");
+		if(items.isNull(item))
+		{
+			channel.sendMessage("👎");
+		}else
+		{
+			Player.inventoryAdd(user, item, 1);
+		}
+	}
 }

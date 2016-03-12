@@ -11,6 +11,7 @@ import sx.blah.discord.api.MissingPermissionsException;
 import sx.blah.discord.handle.EventSubscriber;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IPrivateChannel;
+import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.HTTP429Exception;
 
 public class Input {
@@ -234,7 +235,6 @@ public class Input {
 				event.getMessage().getChannel().sendMessage("You don't have a pickaxe equipped.");
 				return;
 			}
-			event.getMessage().getChannel().sendMessage("You swing your pick at the rock.");
 			Floor.mineRock(event.getMessage().getAuthor(), event.getMessage().getChannel());
 			return;
 		}else if(command.equalsIgnoreCase(".chop") || command.equalsIgnoreCase(".cut"))
@@ -246,7 +246,6 @@ public class Input {
 				event.getMessage().getChannel().sendMessage("You don't have an axe equipped.");
 				return;
 			}
-			event.getMessage().getChannel().sendMessage("You swing your axe at the tree.");
 			Floor.cutTree(event.getMessage().getAuthor(), event.getMessage().getChannel());
 			return;
 		}else if(command.equalsIgnoreCase(".trade"))
@@ -374,6 +373,19 @@ public class Input {
 			{
 				Item.remove(event.getMessage().getAuthor(), event.getMessage().getChannel(), allArgs);
 			}
+		}if(command.equalsIgnoreCase(".give"))
+		{
+			if(allArguments.length()<2)
+			{
+				return;
+			}
+			String[] moreSplitting = allArguments.split(" ", 2);
+			String id = moreSplitting[0];
+			String allArgs = moreSplitting[1];
+			allArgs = allArgs.toLowerCase();
+			allArgs = allArgs.replace(" ", "_");
+			IUser thisUser = event.getMessage().getChannel().getGuild().getUserByID(id);
+			Item.give(thisUser, event.getMessage().getChannel(), allArgs);
 		}
 	}
 }
