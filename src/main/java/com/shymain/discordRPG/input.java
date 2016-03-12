@@ -197,6 +197,68 @@ public class Input {
 			}
 			event.getMessage().getChannel().sendMessage("You swing your axe at the tree.");
 			Floor.cutTree(event.getMessage().getAuthor(), event.getMessage().getChannel());
+		}else if(command.equalsIgnoreCase(".trade"))
+		{
+			if(arguments.length<1)
+			{
+				event.getMessage().getChannel().sendMessage("Please specify a subcommand!");
+				return;
+			}
+			String[] resplit = allArguments.split(" ", 2);
+			String subcommand = resplit[0];
+			if(subcommand.equalsIgnoreCase("accept"))
+			{
+				Trade.accept(event.getMessage().getChannel(), event.getMessage().getAuthor());
+			}else if(subcommand.equalsIgnoreCase("reject"))
+			{
+				Trade.reject(event.getMessage().getChannel(), event.getMessage().getAuthor());
+			}else if(subcommand.equalsIgnoreCase("summary"))
+			{
+				Trade.display(event.getMessage().getChannel(), event.getMessage().getAuthor());
+			}else if(subcommand.equalsIgnoreCase("cancel"))
+			{
+				Trade.cancel(event.getMessage().getChannel(), event.getMessage().getAuthor());
+			}else if(subcommand.equalsIgnoreCase("confirm"))
+			{
+				Trade.confirm(event.getMessage().getChannel(), event.getMessage().getAuthor());
+			}else if(resplit.length>1)
+			{
+				String args = resplit[1];
+				String[] test = args.split(" ");
+				int k = test.length;
+				int number = 0;
+				String theitem = "";
+				if(k<1)
+				{
+					return;
+				}
+				if(StringUtils.isNumeric(test[k-1]))
+				{
+					for(int j = 0;j<k-1;j++)
+					{
+						theitem+=test[j]+"_";
+					}
+					theitem = theitem.substring(0, theitem.lastIndexOf("_"));
+					number = Integer.parseInt(test[k-1]);
+				}
+				else
+			    {
+			    	theitem = item;
+			    	number = 1;
+			    }
+				if(subcommand.equalsIgnoreCase("open"))
+				{
+					Trade.open(event.getMessage().getChannel(), event.getMessage().getAuthor(), event.getMessage().getChannel().getGuild().getUserByID(args));
+				}else if(subcommand.equalsIgnoreCase("add"))
+				{
+					Trade.add(event.getMessage().getChannel(), event.getMessage().getAuthor(), theitem, number);
+				}else if(subcommand.equalsIgnoreCase("remove"))
+				{
+					Trade.remove(event.getMessage().getChannel(), event.getMessage().getAuthor(), theitem, number);
+				}
+				
+			}
+			
 		}
 	}
 	
