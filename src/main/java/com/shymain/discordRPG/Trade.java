@@ -3,6 +3,7 @@ package com.shymain.discordRPG;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -151,9 +152,115 @@ public class Trade {
 		{
 			inventory.put(item, amount);
 		}
+		Player.inventoryRemove(user, item, amount);
 		FileWriter r = new FileWriter(file);
 		r.write(json.toString(3));
 		r.flush();
 		r.close();
+		channel.sendMessage("Successfully added!");
+	}
+	
+	public static void remove(IChannel channel, IUser user, String item, int amount) throws MissingPermissionsException, HTTP429Exception, DiscordException, IOException
+	{
+		if(!openTrades.containsKey(user.getID()) && !openTrades.containsValue(user.getID()))
+		{
+			channel.sendMessage("You are not in a trade!");
+			return;
+		}
+		String id = user.getID();
+		int userno = 1;
+		if(openTrades.containsKey(user.getID()))
+		{
+			id = openTrades.get(user.getID());
+			userno = 2;
+		}
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		JSONObject trades = json.getJSONObject("trades");
+		JSONObject trade = trades.getJSONObject(id);
+		if(!trades.getJSONObject(id).getBoolean("trade_accepted"))
+		{
+			channel.sendMessage("This trade has not been accepted by both parties!");
+			return;
+		}
+		JSONObject json2 = new JSONObject(DiscordRPG.readFile(Item.file));
+		JSONObject items = json2.getJSONObject("items");
+		if(items.isNull(item))
+		{
+			channel.sendMessage("You can't remove a nonexistant item from your trade! That violates the laws of physics!");
+			return;
+		}
+		JSONObject inventory;
+		if(userno==1)
+		{
+			inventory = trade.getJSONObject("user1_inventory");
+		}else{
+			inventory = trade.getJSONObject("user2_inventory");
+		}
+		if(inventory.isNull(item))
+		{
+			channel.sendMessage("You don't have any of this item to remove!");
+			return;
+		}
+		if(inventory.getInt(item) < amount)
+		{
+			channel.sendMessage("You do not have enough of this item to remove!");
+		}
+		if(inventory.getInt(item) == amount)
+		{
+			inventory.remove(item);
+		}else
+		{
+			int amt = inventory.getInt(item);
+			amt -= amount;
+			inventory.remove(item);
+			inventory.put(item, amt);
+		}
+		Player.inventoryAdd(user, item, amount);
+		FileWriter r = new FileWriter(file);
+		r.write(json.toString(3));
+		r.flush();
+		r.close();
+		channel.sendMessage("Successfully removed!");
+	}
+	
+	public static void cancel(IChannel channel, IUser user) throws MissingPermissionsException, HTTP429Exception, DiscordException, JSONException, IOException
+	{
+		if(!openTrades.containsKey(user.getID()) && !openTrades.containsValue(user.getID()))
+		{
+			channel.sendMessage("You are not in a trade!");
+			return;
+		}
+		String id = user.getID();
+		IUser user1;
+		IUser recipient;
+		if(openTrades.containsKey(user.getID()))
+		{
+			id = openTrades.get(user.getID());
+		}
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		JSONObject trades = json.getJSONObject("trades");
+		JSONObject trade = trades.getJSONObject(id);
+		user1 = channel.getGuild().getUserByID(id);
+		recipient = channel.getGuild().getUserByID(trade.getString("recipient"));
+		Iterator<?> keys = trade.getJSONObject("user1_inventory").keys();
+		while(keys.hasNext())
+		{
+			String key = (String)keys.next();
+			int number = trade.getJSONObject("user1_inventory").getInt(key);
+			Player.inventoryAdd(user1, key, number);
+		}
+		Iterator<?> keys2 = trade.getJSONObject("user2_inventory").keys();
+		while(keys2.hasNext())
+		{
+			String key = (String)keys.next();
+			int number = trade.getJSONObject("user2_inventory").getInt(key);
+			Player.inventoryAdd(recipient, key, number);
+		}
+		trades.remove(id);
+		FileWriter r = new FileWriter(file);
+		r.write(json.toString(3));
+		r.flush();
+		r.close();
+		channel.sendMessage("Trade cancelled.");
 	}
 }
