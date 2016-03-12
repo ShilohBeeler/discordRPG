@@ -1,6 +1,5 @@
 package com.shymain.discordRPG;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
@@ -11,7 +10,6 @@ import org.json.JSONObject;
 import sx.blah.discord.api.DiscordException;
 import sx.blah.discord.api.MissingPermissionsException;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
-import sx.blah.discord.handle.impl.events.UserJoinEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IUser;
 import sx.blah.discord.util.HTTP429Exception;
@@ -27,7 +25,7 @@ public class Player {
            + "{"
            +     "mining: { level: 1, xp: 0},"
            +     "fighting: { level: 1, xp: 0},"
-           +     "magic: { level: 1, xp: 0}"
+           +     "magic: { level: 1, xp: 0},"
            +     "woodcutting: { level: 1, xp: 0}"
            + "},"
            + "inventory:"
@@ -120,13 +118,12 @@ public class Player {
 	{
 		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
 		JSONObject player = json.getJSONObject("players").getJSONObject(event.getMessage().getAuthor().getID());
-		Iterator<String> keys = player.getJSONObject("inventory").keys();
+		Iterator<?> keys = player.getJSONObject("inventory").keys();
 		String output = "```\nInventory:\n";
 		while(keys.hasNext())
 		{
 			String key = (String)keys.next();
 			int number = player.getJSONObject("inventory").getInt(key);
-			String numbers = Integer.toString(number);
 			output += key + ": " + number + ".\n";
 		}
 		output += "```";
@@ -210,6 +207,7 @@ public class Player {
 		r.write(json.toString(3));
 		r.flush();
 		r.close();
+		Player.inventoryRemove(user, item, 1);
 		channel.sendMessage("You equip the " + item + ".");
 	}
 	
@@ -241,11 +239,19 @@ public class Player {
 		return item;
 	}
 	
+	public static int getSkill(IUser user, String skill) throws JSONException, IOException
+	{
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		JSONObject player = json.getJSONObject("players").getJSONObject(user.getID());
+		int skill_level = player.getJSONObject("stats").getJSONObject(skill).getInt("level");
+		return skill_level;
+	}
+	
 	public static void getEquip(IUser user, IChannel channel) throws MissingPermissionsException, HTTP429Exception, DiscordException, JSONException, IOException
 	{
 		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
 		JSONObject player = json.getJSONObject("players").getJSONObject(user.getID());
-		Iterator<String> keys = player.getJSONObject("equipment").keys();
+		Iterator<?> keys = player.getJSONObject("equipment").keys();
 		String output = "```\nEquipment:\n";
 		while(keys.hasNext())
 		{
@@ -253,6 +259,10 @@ public class Player {
 			String equipped = player.getJSONObject("equipment").getString(key);
 			output += key + ": " + equipped + ".\n";
 		}
+		String health = Integer.toString(player.getInt("health"));
+		String maxhealth = Integer.toString(player.getInt("maxhealth"));
+		String healthprint = "Health: " + health + "/" + maxhealth + ".\n";
+		output += healthprint;
 		output += "```";
 		channel.sendMessage(output);
 	}
@@ -261,7 +271,7 @@ public class Player {
 	{
 		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
 		JSONObject player = json.getJSONObject("players").getJSONObject(user.getID());
-		Iterator<String> keys = player.getJSONObject("stats").keys();
+		Iterator<?> keys = player.getJSONObject("stats").keys();
 		String output = "```\nSkills:\n";
 		while(keys.hasNext())
 		{

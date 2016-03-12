@@ -67,10 +67,9 @@ public class Floor {
 	public static void mineRock(IUser user, IChannel channel) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
 	{
 		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
-		JSONObject json2 = new JSONObject(DiscordRPG.readFile(Player.file));
-		JSONObject player = json2.getJSONObject("players").getJSONObject(user.getID());
 		JSONObject floor = json.getJSONObject("floors").getJSONObject(channel.getID());
 		JSONObject rock = floor.getJSONObject("events").getJSONObject("Rock");
+		int dropNo = 1;
 		if(rock.getInt("ready")==0)
 		{
 			channel.sendMessage("But there was no ore left.");
@@ -83,10 +82,15 @@ public class Floor {
 			r.write(json.toString(3));
 			r.flush();
 			r.close();
-			Player.inventoryAdd(user, rock.getString("drops"), 1);
+			int skill = Player.getSkill(user, "mining");
+			Random ran = new Random();
+			int factor = ran.nextInt(skill);
+			factor /= 5;
+			dropNo += factor;
+			Player.inventoryAdd(user, rock.getString("drops"), dropNo);
 			Event rockRefresh = new Event("RockRefreshEvent", user, channel);
 			DiscordRPG.timedEvents.put(rockRefresh, rock.getInt("refresh_time"));
-			channel.sendMessage("You get a " + rock.getString("drops") + "!");
+			channel.sendMessage("You get " + dropNo + " " + rock.getString("drops") + "!");
 			Player.addXP(user, channel, "mining", rock.getInt("xp"));
 		}
 	}
@@ -108,10 +112,9 @@ public class Floor {
 	public static void cutTree(IUser user, IChannel channel) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
 	{
 		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
-		JSONObject json2 = new JSONObject(DiscordRPG.readFile(Player.file));
-		JSONObject player = json2.getJSONObject("players").getJSONObject(user.getID());
 		JSONObject floor = json.getJSONObject("floors").getJSONObject(channel.getID());
 		JSONObject tree = floor.getJSONObject("events").getJSONObject("Tree");
+		int dropNo = 1;
 		if(tree.getInt("ready")==0)
 		{
 			channel.sendMessage("All that's left of the trees is a field of stumps.");
@@ -124,7 +127,12 @@ public class Floor {
 			r.write(json.toString(3));
 			r.flush();
 			r.close();
-			Player.inventoryAdd(user, tree.getString("drops"), 1);
+			int skill = Player.getSkill(user, "woodcutting");
+			Random ran = new Random();
+			int factor = ran.nextInt(skill);
+			factor /= 5;
+			dropNo += factor;
+			Player.inventoryAdd(user, tree.getString("drops"), dropNo);
 			Event treeRefresh = new Event("TreeRefreshEvent", user, channel);
 			int refresh_time = tree.getInt("refresh_time");
 			if(Ambient.weather.equalsIgnoreCase("rain"))
@@ -132,7 +140,7 @@ public class Floor {
 				refresh_time /= 2;
 			}
 			DiscordRPG.timedEvents.put(treeRefresh, refresh_time);
-			channel.sendMessage("You get some " + tree.getString("drops") + "!");
+			channel.sendMessage("You get " + dropNo + " " + tree.getString("drops") + "!");
 			Player.addXP(user, channel, "woodcutting", tree.getInt("xp"));
 		}
 	}

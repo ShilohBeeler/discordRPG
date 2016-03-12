@@ -1,6 +1,5 @@
 package com.shymain.discordRPG;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.lang3.StringUtils;
@@ -40,25 +39,9 @@ public class Input {
 		}
 		item = allArguments;
 		item = item.replaceAll(" ", "_");
-		commands:
 		if(command.equalsIgnoreCase(".help")){
-			IPrivateChannel pm = null;
-			try {
-				pm = event.getClient().getOrCreatePMChannel(event.getMessage().getAuthor());
-			} catch (Exception e) {
-				event.getMessage().getChannel().sendMessage("You managed to find a new exception. Good Job.");
-				break commands;
-			}
-			pm.sendMessage("**Floor Commands:**\n"
-					+ "*.join* if the bot didn't add you automatically.\n"
-					+ "*.inv* displays your inventory.\n"
-					+ "*.use [item]* uses said item.\n"
-					+ "*.equip [item]* equips item.\n"
-					+ "*.unequip [slot]* unequips item in slot.\n"
-					+ "*.body* lists equipped items.\n"
-					+ "*.skills* lists skills.");
-		}
-		else if(command.equalsIgnoreCase(".inv") || command.equalsIgnoreCase(".inventory"))
+			help(event);
+		}else if(command.equalsIgnoreCase(".inv") || command.equalsIgnoreCase(".inventory"))
 		{
 			Player.getInventory(event);
 		}else if(command.equalsIgnoreCase(".use"))
@@ -87,13 +70,68 @@ public class Input {
 		}
 	}
 	
+	public static void help(MessageReceivedEvent event) throws MissingPermissionsException, HTTP429Exception, DiscordException
+	{
+		IPrivateChannel pm = null;
+		try {
+			pm = event.getClient().getOrCreatePMChannel(event.getMessage().getAuthor());
+		} catch (Exception e) {
+			event.getMessage().getChannel().sendMessage("You managed to find a new exception. Good Job.");
+			return;
+		}
+		if(arguments == null)
+		{
+		pm.sendMessage("**Command sections:**\n"
+				+ "*floor* is general use commands in the server.\n"
+				+ "*shop* shows transactional commands for the shop.\n"
+				+ "*pm* shows pm-only commands.\n"
+				+ "*trade* is a list of commands relevant for trading.\n"
+				+ "Type *.help [section]* for more information.");
+		return;
+		}
+		String[] splitted = allArguments.split(" ");
+		String subcommand = splitted[0];
+		if(subcommand.equalsIgnoreCase("floor"))
+		{
+			pm.sendMessage("**Floor Commands:**\n"
+					+ "*.join* if the bot didn't add you automatically.\n"
+					+ "*.inv* displays your inventory.\n"
+					+ "*.use [item]* uses said item.\n"
+					+ "*.equip [item]* equips item.\n"
+					+ "*.unequip [slot]* unequips item in slot.\n"
+					+ "*.body* lists equipped items.\n"
+					+ "*.skills* lists skills.\n"
+					+ "*.mine* mines a rock.\n"
+					+ "*.chop* cuts down a tree.");	
+		}else if(subcommand.equalsIgnoreCase("shop"))
+		{
+			pm.sendMessage("**Shop Commands:**\n"
+					+ "*.wares* displays the purchasable item.\n"
+					+ "*.inv* will display your inventory.\n"
+					+ "*.buy [item]* will purchase the specified item.\n"
+					+ "*.price [item]* will show the selling price of the specified item.\n"
+					+ "*.sell [item] <number>* will sell the specified item, optionally in the specified amount.");
+		}else if(subcommand.equalsIgnoreCase("pm"))
+		{
+			pm.sendMessage("**PM Commands:**\n"
+					+ "*.fight* either starts a battle or attacks an enemy.\n");
+		}else if(subcommand.equalsIgnoreCase("trade"))
+		{
+			pm.sendMessage("**Trade Commands:**\n"
+					+ "*.trade open [player]* requests to trade with [player].\n"
+					+ "*.trade accept* accepts a trade request.\n"
+					+ "*.trade reject* rejects a trade request.\n"
+					+ "*.trade add [item] <number>* adds items to your trade offer, with a default amount of one.\n"
+					+ "*.trade remove [item] <number>* remove items from your trade offer, with a default amount of one.\n"
+					+ "*.trade summary* shows the current state of the trade.\n"
+					+ "*.trade confirm* confirms your offer and locks .trade add and .trade remove.\n"
+					+ "*.trade cancel* quits the trade at any point.");
+		}
+	}
+	
 	public static void privateChannels(MessageReceivedEvent event) throws MissingPermissionsException, HTTP429Exception, DiscordException, JSONException, IOException
 	{
-		if(command.equalsIgnoreCase(".help"))
-		{
-			event.getMessage().getChannel().sendMessage("PM Commands:\n"
-					+ "*.fight* either starts a battle or attacks an enemy.\n");
-		}else if(command.equalsIgnoreCase(".fight") || command.equalsIgnoreCase(".attack"))
+		if(command.equalsIgnoreCase(".fight") || command.equalsIgnoreCase(".attack"))
 		{
 			String holding = Player.getSlot(event.getMessage().getAuthor(), event.getMessage().getChannel(), "hand");
 			boolean can_fight = Item.getBool(holding, "can_fight");
@@ -113,14 +151,7 @@ public class Input {
 	
 	public static void shop(MessageReceivedEvent event) throws MissingPermissionsException, HTTP429Exception, DiscordException, JSONException, IOException
 	{
-		if(command.equalsIgnoreCase(".help"))
-		{
-			event.getMessage().getChannel().sendMessage("*.wares* displays the purchasable item.\n"
-					+ "*.inv* will display your inventory.\n"
-					+ "*.buy [item]* will purchase the specified item.\n"
-					/*+ "*.price [item]* will show the selling price of the specified item.\n"
-					+ "*.sell [item]* will sell the specified item."*/);
-		}else if(command.equalsIgnoreCase(".wares") || command.equalsIgnoreCase(".items") || command.equalsIgnoreCase(".shop"))
+		if(command.equalsIgnoreCase(".wares") || command.equalsIgnoreCase(".items") || command.equalsIgnoreCase(".shop"))
 		{
 			Store.displayWares(event);
 		}else if(command.equalsIgnoreCase(".buy"))
@@ -173,9 +204,6 @@ public class Input {
 			}else{
 				event.getMessage().getChannel().sendMessage("You are already in the system!");
 			}
-		}else if(command.equalsIgnoreCase(".help"))
-		{
-			event.getMessage().getChannel().sendMessage("*.join* if you are not already added to the game.");
 		}else if(command.equalsIgnoreCase(".mine"))
 		{
 			String holding = Player.getSlot(event.getMessage().getAuthor(), event.getMessage().getChannel(), "hand");
@@ -198,6 +226,71 @@ public class Input {
 			}
 			event.getMessage().getChannel().sendMessage("You swing your axe at the tree.");
 			Floor.cutTree(event.getMessage().getAuthor(), event.getMessage().getChannel());
+		}else if(command.equalsIgnoreCase(".trade"))
+		{
+			if(arguments.length<1)
+			{
+				event.getMessage().getChannel().sendMessage("Please specify a subcommand!");
+				return;
+			}
+			String[] resplit = allArguments.split(" ", 2);
+			String subcommand = resplit[0];
+			if(subcommand.equalsIgnoreCase("accept"))
+			{
+				Trade.accept(event.getMessage().getChannel(), event.getMessage().getAuthor());
+			}else if(subcommand.equalsIgnoreCase("reject"))
+			{
+				Trade.reject(event.getMessage().getChannel(), event.getMessage().getAuthor());
+			}else if(subcommand.equalsIgnoreCase("summary"))
+			{
+				Trade.display(event.getMessage().getChannel(), event.getMessage().getAuthor());
+			}else if(subcommand.equalsIgnoreCase("cancel"))
+			{
+				Trade.cancel(event.getMessage().getChannel(), event.getMessage().getAuthor());
+			}else if(subcommand.equalsIgnoreCase("confirm"))
+			{
+				Trade.confirm(event.getMessage().getChannel(), event.getMessage().getAuthor());
+			}else if(resplit.length>1)
+			{
+				String args = resplit[1];
+				String id = args;
+				id = id.replace("<@", "");
+				id = id.replace(">", "");
+				String[] test = args.split(" ");
+				int k = test.length;
+				int number = 0;
+				String theitem = "";
+				if(k<1)
+				{
+					return;
+				}
+				if(StringUtils.isNumeric(test[k-1]))
+				{
+					for(int j = 0;j<k-1;j++)
+					{
+						theitem+=test[j]+"_";
+					}
+					theitem = theitem.substring(0, theitem.lastIndexOf("_"));
+					number = Integer.parseInt(test[k-1]);
+				}
+				else
+			    {
+			    	theitem = args.replace(" ", "_");
+			    	number = 1;
+			    }
+				if(subcommand.equalsIgnoreCase("open"))
+				{
+					Trade.open(event.getMessage().getChannel(), event.getMessage().getAuthor(), event.getMessage().getChannel().getGuild().getUserByID(id));
+				}else if(subcommand.equalsIgnoreCase("add"))
+				{
+					Trade.add(event.getMessage().getChannel(), event.getMessage().getAuthor(), theitem, number);
+				}else if(subcommand.equalsIgnoreCase("remove"))
+				{
+					Trade.remove(event.getMessage().getChannel(), event.getMessage().getAuthor(), theitem, number);
+				}
+				
+			}
+			
 		}
 	}
 	
