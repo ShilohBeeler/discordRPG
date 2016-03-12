@@ -41,40 +41,52 @@ public class Input {
 		item = item.replaceAll(" ", "_");
 		if(command.equalsIgnoreCase(".help")){
 			help(event);
-		}else if(command.equalsIgnoreCase(".inv") || command.equalsIgnoreCase(".inventory"))
-		item = item.toLowerCase();
-		if(command.equalsIgnoreCase(".info")|| command.equalsIgnoreCase(".about"))
+			return;
+		}
+		else if(command.equalsIgnoreCase(".info")|| command.equalsIgnoreCase(".about"))
 		{
 			event.getMessage().getChannel().sendMessage("*discordRPG* bot programmed by **Shymain**!\n"
 					+ "Version: 0.2\n"
 					+ "Fork me on GitHub! https://github.com/Shymain/discordRPG");
+			return;
 		}	
 		else if(command.equalsIgnoreCase(".inv") || command.equalsIgnoreCase(".inventory"))
 		{
+			item = item.toLowerCase();
 			Player.getInventory(event);
+			return;
 		}else if(command.equalsIgnoreCase(".use"))
 		{
 			useHandling(event);
+			return;
 		}else if(command.equalsIgnoreCase(".equip")){
 			Player.equip(event.getMessage().getAuthor(), event.getMessage().getChannel(), item);
+			return;
 		}else if(command.equalsIgnoreCase(".unequip")){
 			Player.unequip(event.getMessage().getAuthor(), event.getMessage().getChannel(), item);
+			return;
 		}else if(command.equalsIgnoreCase(".equipment") || command.equalsIgnoreCase(".body")){
 			Player.getEquip(event.getMessage().getAuthor(), event.getMessage().getChannel());
+			return;
 		}else if(command.equalsIgnoreCase(".skills") || command.equalsIgnoreCase(".stats")){
 			Player.getSkills(event.getMessage().getAuthor(), event.getMessage().getChannel());
+			return;
 		}else if(event.getMessage().getChannel().getID().equalsIgnoreCase("156840527164211200"))
 		{
 			shop(event);
+			return;
 		}else if(event.getMessage().getChannel().getID().equalsIgnoreCase("158113040838033408"))
 		{
 			admin(event);
+			return;
 		}else if(event.getMessage().getChannel().isPrivate())
 			{
 			privateChannels(event);
+			return;
 		}else if(event.getMessage().getChannel().getGuild().getID().equalsIgnoreCase("149548522058809344"))
 		{
 			floorCommands(event);
+			return;
 		}
 	}
 	
@@ -160,14 +172,6 @@ public class Input {
 	public static void shop(MessageReceivedEvent event) throws MissingPermissionsException, HTTP429Exception, DiscordException, JSONException, IOException
 	{
 		if(command.equalsIgnoreCase(".wares") || command.equalsIgnoreCase(".items") || command.equalsIgnoreCase(".shop"))
-		if(command.equalsIgnoreCase(".help"))
-		{
-			event.getMessage().getChannel().sendMessage("*.wares* displays the purchasable item.\n"
-					+ "*.inv* will display your inventory.\n"
-					+ "*.buy [item]* will purchase the specified item.\n"
-					+ "*.price [item]* will show the selling price of the specified item.\n"
-					+ "*.sell [item]* will sell the specified item.");
-		}else if(command.equalsIgnoreCase(".wares") || command.equalsIgnoreCase(".items") || command.equalsIgnoreCase(".shop"))
 		{
 			Store.displayWares(event);
 		}else if(command.equalsIgnoreCase(".buy"))
@@ -220,25 +224,7 @@ public class Input {
 			}else{
 				event.getMessage().getChannel().sendMessage("You are already in the system!");
 			}
-		}else if(command.equalsIgnoreCase(".help"))
-		{
-			IPrivateChannel pm = null;
-			try {
-				pm = event.getClient().getOrCreatePMChannel(event.getMessage().getAuthor());
-			} catch (Exception e) {
-				event.getMessage().getChannel().sendMessage("You managed to find a new exception. Good Job.");
-				return;
-			}
-			pm.sendMessage("**Floor Commands:**\n"
-					+ "*.join* if the bot didn't add you automatically.\n"
-					+ "*.inv* displays your inventory.\n"
-					+ "*.use [item]* uses said item.\n"
-					+ "*.equip [item]* equips item.\n"
-					+ "*.unequip [slot]* unequips item in slot.\n"
-					+ "*.body* lists equipped items.\n"
-					+ "*.skills* lists skills.\n"
-					+ "*.mine* mines a rock.\n"
-					+ "*.chop* cuts a tree.\n");
+			return;
 		}else if(command.equalsIgnoreCase(".mine"))
 		{
 			String holding = Player.getSlot(event.getMessage().getAuthor(), event.getMessage().getChannel(), "hand");
@@ -250,6 +236,7 @@ public class Input {
 			}
 			event.getMessage().getChannel().sendMessage("You swing your pick at the rock.");
 			Floor.mineRock(event.getMessage().getAuthor(), event.getMessage().getChannel());
+			return;
 		}else if(command.equalsIgnoreCase(".chop") || command.equalsIgnoreCase(".cut"))
 		{
 			String holding = Player.getSlot(event.getMessage().getAuthor(), event.getMessage().getChannel(), "hand");
@@ -261,6 +248,7 @@ public class Input {
 			}
 			event.getMessage().getChannel().sendMessage("You swing your axe at the tree.");
 			Floor.cutTree(event.getMessage().getAuthor(), event.getMessage().getChannel());
+			return;
 		}else if(command.equalsIgnoreCase(".trade"))
 		{
 			if(arguments.length<1)
