@@ -131,6 +131,16 @@ public class DiscordRPG {
 			w.close();
 			Store.initialize();
 		}
+		File l = new File(System.getProperty("user.home")+"/discordRPG/trades.json");
+		if(!l.exists())
+		{
+			l.createNewFile();
+			FileWriter w = new FileWriter(System.getProperty("user.home")+"/discordRPG/trades.json");
+			w.write("{\"trades\":{}}");
+			w.flush();
+			w.close();
+			Store.initialize();
+		}
 		}
 	}
 	

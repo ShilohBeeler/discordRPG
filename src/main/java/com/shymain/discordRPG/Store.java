@@ -1,6 +1,5 @@
 package com.shymain.discordRPG;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
@@ -44,7 +43,7 @@ public class Store {
 		JSONObject json2 = new JSONObject(DiscordRPG.readFile(file));
 		int number = json.getJSONObject("players").getJSONObject(event.getMessage().getAuthor().getID()).getInt("rank");
 		JSONObject shop = json2.getJSONObject("ranks").getJSONObject(Integer.toString(number)).getJSONObject("shop");
-		Iterator<String> keys = shop.keys();
+		Iterator<?> keys = shop.keys();
 		String output = "```\nAvailable Items:\n";
 		while(keys.hasNext())
 		{
