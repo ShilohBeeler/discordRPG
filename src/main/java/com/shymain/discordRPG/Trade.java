@@ -101,19 +101,56 @@ public class Trade {
 			return;
 		}
 		String id = user.getID();
+		int userno = 1;
 		if(openTrades.containsKey(user.getID()))
 		{
 			id = openTrades.get(user.getID());
+			userno = 2;
 		}
 		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
 		JSONObject trades = json.getJSONObject("trades");
+		JSONObject trade = trades.getJSONObject(id);
 		if(!trades.getJSONObject(id).getBoolean("trade_accepted"))
 		{
 			channel.sendMessage("This trade has not been accepted by both parties!");
+			return;
 		}
-		JSONObject json2 = new JSONObject(DiscordRPG.readFile(Player.file));
-		JSONObject player = json2.getJSONObject("players").getJSONObject(user.getID());
-		
+		JSONObject json2 = new JSONObject(DiscordRPG.readFile(Item.file));
+		JSONObject items = json2.getJSONObject("items");
+		if(items.isNull(item))
+		{
+			channel.sendMessage("You can't add a nonexistant item to your trade! That violates the laws of physics!");
+			return;
+		}
+		JSONObject json3 = new JSONObject(DiscordRPG.readFile(Player.file));
+		JSONObject player = json3.getJSONObject("players").getJSONObject(user.getID());
+		if(player.getJSONObject("inventory").isNull(item))
+		{
+			channel.sendMessage("You do not have any of this item!");
+			return;
+		}
+		if(player.getJSONObject("inventory").getInt(item) < amount)
+		{
+			channel.sendMessage("You do not have enough of this item!");
+			return;
+		}
+		JSONObject inventory;
+		if(userno==1)
+		{
+			inventory = trade.getJSONObject("user1_inventory");
+		}else{
+			inventory = trade.getJSONObject("user2_inventory");
+		}
+		if(inventory.has(item))
+		{
+			int amt = inventory.getInt(item);
+			amt += amount;
+			inventory.remove(item);
+			inventory.put(item, amt);
+		}else
+		{
+			inventory.put(item, amount);
+		}
 		FileWriter r = new FileWriter(file);
 		r.write(json.toString(3));
 		r.flush();
