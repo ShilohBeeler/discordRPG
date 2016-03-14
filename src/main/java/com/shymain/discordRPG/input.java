@@ -356,7 +356,7 @@ public class Input {
 			{
 				Item.remove(event.getMessage().getAuthor(), event.getMessage().getChannel(), allArgs);
 			}
-		}if(command.equalsIgnoreCase("give"))
+		}else if(command.equalsIgnoreCase("give"))
 		{
 			if(allArguments.length()<2)
 			{
@@ -369,7 +369,7 @@ public class Input {
 			allArgs = allArgs.replace(" ", "_");
 			IUser thisUser = event.getMessage().getChannel().getGuild().getUserByID(id);
 			Item.give(thisUser, event.getMessage().getChannel(), allArgs);
-		}if(command.equalsIgnoreCase("command"))
+		}else if(command.equalsIgnoreCase("command"))
 		{
 			if(arguments==null || arguments.length<2)
 			{
@@ -395,6 +395,58 @@ public class Input {
 				}else if(arguments[1].equalsIgnoreCase("event"))
 				{
 					Commands.tieEvent(event.getMessage().getChannel(), arguments[2], arguments[3]);
+				}
+			}
+		}else if(command.equalsIgnoreCase("refinery"))
+		{
+			if(arguments==null || arguments.length < 2)
+			{
+				event.getMessage().getChannel().sendMessage("Please add arguments!");
+				return;
+			}
+			if(arguments[0].equalsIgnoreCase("create"))
+			{
+				Refinery.create(arguments[1], event.getMessage().getChannel());
+			}else if(arguments[0].equalsIgnoreCase("delete"))
+			{
+				Refinery.delete(arguments[1], event.getMessage().getChannel());
+			}else if(arguments[0].equalsIgnoreCase("setskill"))
+			{
+				if(arguments.length!=3)
+				{
+					event.getMessage().getChannel().sendMessage(".refinery setskill [refinery] [skill]");
+					return;
+				}
+				Refinery.skillSet(arguments[1], arguments[2], event.getMessage().getChannel());
+			}else if(arguments[0].equalsIgnoreCase("input"))
+			{
+				if(arguments.length<4)
+				{
+					event.getMessage().getChannel().sendMessage("Please add correct parameters.");
+					return;
+				}
+				String[] newArguments = allArguments.split(" ", 4);
+				String item = newArguments[3];
+				item = item.toLowerCase();
+				item = item.replaceAll(" ", "_");
+				if(arguments[1].equalsIgnoreCase("add"))
+				{
+					Refinery.inputCreate(arguments[2], item, event.getMessage().getChannel());
+				}else if(arguments[1].equalsIgnoreCase("delete"))
+				{
+					Refinery.inputDelete(arguments[2], item, event.getMessage().getChannel());
+				}else if(arguments[1].equalsIgnoreCase("edit"))
+				{
+					String[] itemBreak = item.split(" ");
+					if(itemBreak.length < 3)
+					{
+						event.getMessage().getChannel().sendMessage("refinery input edit [refinery] [input] [key] [value]");
+						return;
+					}
+					String value = itemBreak[itemBreak.length-1];
+					String key = itemBreak[itemBreak.length-2];
+					item.replace("_"+key+"_"+value, "");
+					Refinery.inputEdit(arguments[2], item, key, value, event.getMessage().getChannel());
 				}
 			}
 		}
