@@ -72,11 +72,11 @@ public class Input {
 		}else if(command.equalsIgnoreCase(".skills") || command.equalsIgnoreCase(".stats")){
 			Player.getSkills(event.getMessage().getAuthor(), event.getMessage().getChannel());
 			return;
-		}else if(event.getMessage().getChannel().getID().equalsIgnoreCase("156840527164211200"))
+		}else if(event.getMessage().getChannel().getID().equalsIgnoreCase("157558822842531840"))
 		{
 			shop(event);
 			return;
-		}else if(event.getMessage().getChannel().getID().equalsIgnoreCase("158113040838033408"))
+		}else if(event.getMessage().getChannel().getID().equalsIgnoreCase("157564348263432192"))
 		{
 			admin(event);
 			return;
@@ -84,7 +84,7 @@ public class Input {
 			{
 			privateChannels(event);
 			return;
-		}else if(event.getMessage().getChannel().getGuild().getID().equalsIgnoreCase("149548522058809344"))
+		}else if(event.getMessage().getChannel().getGuild().getID().equalsIgnoreCase("157558660732682241"))
 		{
 			floorCommands(event);
 			return;

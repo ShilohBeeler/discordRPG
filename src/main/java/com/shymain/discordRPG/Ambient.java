@@ -16,7 +16,7 @@ public class Ambient {
 	{
 		weather = "clear";
 		IChannel channel = event.getClient()
-				.getGuildByID("149548522058809344")
+				.getGuildByID("157558660732682241")
 				.getChannels()
 				.get(0);
 		Event weatherCycle = new Event("WeatherTestEvent", null, channel);
@@ -39,7 +39,7 @@ public class Ambient {
 		{
 			testnum = 5;
 			toChange = "clear";
-			changeMessage = "The clouds disperse to reveal a crystal clean sky.";
+			changeMessage = "The clouds disperse to reveal a crystal clear sky.";
 		}
 		if(random<testnum)
 		{

@@ -169,7 +169,7 @@ public class DiscordRPG {
 	}
 	
 	public static void main(String[] args) throws DiscordException, JSONException, IOException{
-		IDiscordClient client = DiscordRPG.getClient("discordrpg@gmail.com", Password.getPass(), true);
+		IDiscordClient client = DiscordRPG.getClient("discordrpg+beta@gmail.com", Password.getPass(), true);
 		EventDispatcher dispatcher = client.getDispatcher();
 	    dispatcher.registerListener(new DiscordRPG());
 	    timer.schedule(ticker, 0, 1000);

@@ -27,7 +27,7 @@ public class Monster {
 		           + "maxhealth: 10,"
 		           + "attack: 1,"
 		           + "speed: 10,"
-		           + "xp: 3,"
+		           + "xp: 5,"
 		           + "loottables: {"
 		           + "iron_ore: 1,"
 		           + "coins: 5"
