@@ -162,8 +162,17 @@ public class DiscordRPG {
 		if(!o.exists())
 		{
 			o.createNewFile();
-			FileWriter w = new FileWriter(System.getProperty("user.home")+"/discordRPG/config.json");
 			Config.initialize();
+		}
+		File p = new File(System.getProperty("user.home")+"/discordRPG/commands.json");
+		if(!p.exists())
+		{
+			p.createNewFile();
+			FileWriter w = new FileWriter(System.getProperty("user.home")+"/discordRPG/commands.json");
+			w.write("{\"commands\":{}}");
+			w.flush();
+			w.close();
+			Commands.initialize();
 		}
 		}
 	}
@@ -179,7 +188,8 @@ public class DiscordRPG {
 			event.getMessage().getChannel().sendMessage("A new traveler arrives, sword in hand.\n"
 				+ event.getMessage().getAuthor().mention() + ": Many functions take place via DM. Use .help anywhere in DM or this server to see commands available there.");
 		}
-		if(event.getMessage().getContent().startsWith("."))
+		JSONObject json2 = new JSONObject(DiscordRPG.readFile(Config.file));
+		if(event.getMessage().getContent().startsWith(json2.getJSONObject("config").getString("prefix")))
 			Input.commands(event);
 	}
 

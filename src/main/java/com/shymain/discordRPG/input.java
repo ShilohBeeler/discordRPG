@@ -28,9 +28,9 @@ public class Input {
 	{
 		allArguments = "";
 		arguments = null;
-		
+		JSONObject json2 = new JSONObject(DiscordRPG.readFile(Config.file));
 		rawMessage = event.getMessage().getContent();
-		
+		rawMessage = rawMessage.replaceFirst(json2.getJSONObject("config").getString("prefix"), "");
 		parts = rawMessage.split(" ", 2);
 		command = parts[0];
 		if(parts.length == 2)
@@ -40,36 +40,36 @@ public class Input {
 		}
 		item = allArguments;
 		item = item.replaceAll(" ", "_");
-		if(command.equalsIgnoreCase(".help")){
+		if(command.equalsIgnoreCase("help")){
 			help(event);
 			return;
 		}
-		else if(command.equalsIgnoreCase(".info")|| command.equalsIgnoreCase(".about"))
+		else if(command.equalsIgnoreCase("info")|| command.equalsIgnoreCase("about"))
 		{
 			event.getMessage().getChannel().sendMessage("*discordRPG* bot programmed by **Shymain**!\n"
 					+ "Version: 0.2\n"
 					+ "Fork me on GitHub! https://github.com/Shymain/discordRPG");
 			return;
 		}	
-		else if(command.equalsIgnoreCase(".inv") || command.equalsIgnoreCase(".inventory"))
+		else if(command.equalsIgnoreCase("inv") || command.equalsIgnoreCase("inventory"))
 		{
 			item = item.toLowerCase();
 			Player.getInventory(event);
 			return;
-		}else if(command.equalsIgnoreCase(".use"))
+		}else if(command.equalsIgnoreCase("use"))
 		{
 			useHandling(event);
 			return;
-		}else if(command.equalsIgnoreCase(".equip")){
+		}else if(command.equalsIgnoreCase("equip")){
 			Player.equip(event.getMessage().getAuthor(), event.getMessage().getChannel(), item);
 			return;
-		}else if(command.equalsIgnoreCase(".unequip")){
+		}else if(command.equalsIgnoreCase("unequip")){
 			Player.unequip(event.getMessage().getAuthor(), event.getMessage().getChannel(), item);
 			return;
-		}else if(command.equalsIgnoreCase(".equipment") || command.equalsIgnoreCase(".body")){
+		}else if(command.equalsIgnoreCase("equipment") || command.equalsIgnoreCase("body")){
 			Player.getEquip(event.getMessage().getAuthor(), event.getMessage().getChannel());
 			return;
-		}else if(command.equalsIgnoreCase(".skills") || command.equalsIgnoreCase(".stats")){
+		}else if(command.equalsIgnoreCase("skills") || command.equalsIgnoreCase("stats")){
 			Player.getSkills(event.getMessage().getAuthor(), event.getMessage().getChannel());
 			return;
 		}else if(event.getMessage().getChannel().getID().equalsIgnoreCase("157558822842531840"))
@@ -152,7 +152,7 @@ public class Input {
 	
 	public static void privateChannels(MessageReceivedEvent event) throws MissingPermissionsException, HTTP429Exception, DiscordException, JSONException, IOException
 	{
-		if(command.equalsIgnoreCase(".fight") || command.equalsIgnoreCase(".attack"))
+		if(command.equalsIgnoreCase("fight") || command.equalsIgnoreCase("attack"))
 		{
 			String holding = Player.getSlot(event.getMessage().getAuthor(), event.getMessage().getChannel(), "hand");
 			boolean can_fight = Item.getBool(holding, "can_fight");
@@ -172,17 +172,17 @@ public class Input {
 	
 	public static void shop(MessageReceivedEvent event) throws MissingPermissionsException, HTTP429Exception, DiscordException, JSONException, IOException
 	{
-		if(command.equalsIgnoreCase(".wares") || command.equalsIgnoreCase(".items") || command.equalsIgnoreCase(".shop"))
+		if(command.equalsIgnoreCase("wares") || command.equalsIgnoreCase("items") || command.equalsIgnoreCase("shop"))
 		{
 			Store.displayWares(event);
-		}else if(command.equalsIgnoreCase(".buy"))
+		}else if(command.equalsIgnoreCase("buy"))
 		{
 			if(arguments==null)
 			{
 				event.getMessage().getChannel().sendMessage("Buy what?");
 			}
 			Store.buyItem(event, item);
-		}else if(command.equalsIgnoreCase(".sell"))
+		}else if(command.equalsIgnoreCase("sell"))
 		{
 			String[] test = allArguments.split(" ");
 			int k = test.length;
@@ -207,7 +207,7 @@ public class Input {
 		    	number = 1;
 		    }
 		    Store.sellItem(event, theitem, number);
-		}else if(command.equalsIgnoreCase(".value") || command.equalsIgnoreCase(".price"))
+		}else if(command.equalsIgnoreCase("value") || command.equalsIgnoreCase("price"))
 		{
 			Store.valueItem(event, item);
 		}
@@ -215,7 +215,9 @@ public class Input {
 	
 	public static void floorCommands(MessageReceivedEvent event) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
 	{
-		if(command.equalsIgnoreCase(".join"))
+		JSONObject json_ = new JSONObject(DiscordRPG.readFile(Commands.file));
+		JSONObject commands = json_.getJSONObject("commands");
+		if(command.equalsIgnoreCase("join"))
 		{
 			JSONObject json = new JSONObject(DiscordRPG.readFile(Player.file));
 			if(json.getJSONObject("players").isNull(event.getMessage().getAuthor().getID()))
@@ -226,10 +228,10 @@ public class Input {
 				event.getMessage().getChannel().sendMessage("You are already in the system!");
 			}
 			return;
-		}else if(command.equalsIgnoreCase(".mine"))
+		}else if(commands.has(command.toLowerCase()))
 		{
-			
-		}else if(command.equalsIgnoreCase(".trade"))
+			tieCommands(event);
+		}else if(command.equalsIgnoreCase("trade"))
 		{
 			if(arguments.length<1)
 			{
@@ -332,7 +334,7 @@ public class Input {
 	
 	public static void admin(MessageReceivedEvent event) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
 	{
-		if(command.equalsIgnoreCase(".item"))
+		if(command.equalsIgnoreCase("item"))
 		{
 			if(allArguments.length()<2)
 			{
@@ -354,7 +356,7 @@ public class Input {
 			{
 				Item.remove(event.getMessage().getAuthor(), event.getMessage().getChannel(), allArgs);
 			}
-		}if(command.equalsIgnoreCase(".give"))
+		}if(command.equalsIgnoreCase("give"))
 		{
 			if(allArguments.length()<2)
 			{
@@ -367,6 +369,24 @@ public class Input {
 			allArgs = allArgs.replace(" ", "_");
 			IUser thisUser = event.getMessage().getChannel().getGuild().getUserByID(id);
 			Item.give(thisUser, event.getMessage().getChannel(), allArgs);
+		}
+	}
+	
+	public static void tieCommands(MessageReceivedEvent event) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
+	{
+		JSONObject json = new JSONObject(DiscordRPG.readFile(Commands.file));
+		JSONObject tcommand = json.getJSONObject("commands").getJSONObject(command);
+		if(tcommand.getString("type").equalsIgnoreCase("event"))
+		{
+			String name = tcommand.getString("tied_to");
+			REvents.doEvent(name, event.getMessage().getAuthor(), event.getMessage().getChannel());
+		}else if(tcommand.getString("type").equalsIgnoreCase("refinery"))
+		{
+			String name = tcommand.getString("tied_to");
+			Refinery.refine(name, item, event.getMessage().getChannel(), event.getMessage().getAuthor());
+		}else
+		{
+			event.getMessage().getChannel().sendMessage("This command is not tied to anything.");
 		}
 	}
 }
