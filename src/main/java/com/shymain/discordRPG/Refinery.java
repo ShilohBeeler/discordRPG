@@ -62,7 +62,7 @@ public class Refinery {
 			channel.sendMessage("You can't do that here!");
 			return;
 		}
-		if(refineries.getJSONObject(refinery).isNull(item))
+		if(refineries.getJSONObject(refinery).getJSONObject("input").isNull(item))
 		{
 			channel.sendMessage("You cannot refine this item.");
 			return;
@@ -74,14 +74,15 @@ public class Refinery {
 			channel.sendMessage("You don't have that item!");
 			return;
 		}
-		if(player.getJSONObject("inventory").getInt(item)<refineries.getJSONObject(refinery).getJSONObject(item).getInt("required"))
+		JSONObject item_ = refineries.getJSONObject(refinery).getJSONObject("input").getJSONObject(item);
+		if(player.getJSONObject("inventory").getInt(item)<item_.getInt("required"))
 		{
-			channel.sendMessage("You need " + refineries.getJSONObject(refinery).getJSONObject(item).getInt("required") + item + " to refine them.");
+			channel.sendMessage("You need " + item_.getInt("required") + item + " to refine them.");
 		}
-		Player.inventoryRemove(user, item, refineries.getJSONObject(refinery).getJSONObject(item).getInt("required"));
-		Player.inventoryAdd(user, refineries.getJSONObject(refinery).getJSONObject(item).getString("output"), refineries.getJSONObject(refinery).getJSONObject(item).getInt("result"));
-		Player.addXP(user, channel, refineries.getJSONObject(refinery).getString("skill"), refineries.getJSONObject(refinery).getJSONObject(item).getInt("xp"));
-		channel.sendMessage("You refine " + refineries.getJSONObject(refinery).getJSONObject(item).getInt("required") + " " + item +", and retrieve "+ refineries.getJSONObject(refinery).getJSONObject(item).getInt("result") + " "+ refineries.getJSONObject(refinery).getJSONObject(item).getString("output") + ".");
+		Player.inventoryRemove(user, item, item_.getInt("required"));
+		Player.inventoryAdd(user, item_.getString("output"), item_.getInt("result"));
+		Player.addXP(user, channel, refineries.getJSONObject(refinery).getString("skill"), item_.getInt("xp"));
+		channel.sendMessage("You refine " + item_.getInt("required") + " " + item +", and retrieve "+ item_.getInt("result") + " "+ item_.getString("output") + ".");
 	}
 	
 	public static void create(String name, IChannel channel) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
@@ -153,13 +154,13 @@ public class Refinery {
 			channel.sendMessage("This refinery doesn't exist.");
 			return;
 		}
-		if(json.getJSONObject("refineries").getJSONObject(refinery).has(name))
+		if(json.getJSONObject("refineries").getJSONObject(refinery).getJSONObject("input").has(name))
 		{
 			channel.sendMessage("This input already exists.");
 			return;
 		}
 		JSONObject input = new JSONObject(template);
-		json.getJSONObject("refineries").getJSONObject(refinery).put(name, input);
+		json.getJSONObject("refineries").getJSONObject(refinery).getJSONObject("input").put(name, input);
 		FileWriter r = new FileWriter(file);
 		r.write(json.toString(3));
 		r.flush();
@@ -175,12 +176,12 @@ public class Refinery {
 			channel.sendMessage("This refinery doesn't exist.");
 			return;
 		}
-		if(json.getJSONObject("refineries").getJSONObject(refinery).isNull(name))
+		if(json.getJSONObject("refineries").getJSONObject(refinery).getJSONObject("input").isNull(name))
 		{
 			channel.sendMessage("This input doesn't exist.");
 			return;
 		}
-		json.getJSONObject("refineries").getJSONObject(refinery).remove(name);
+		json.getJSONObject("refineries").getJSONObject(refinery).getJSONObject("input").remove(name);
 		FileWriter r = new FileWriter(file);
 		r.write(json.toString(3));
 		r.flush();
@@ -196,12 +197,12 @@ public class Refinery {
 			channel.sendMessage("This refinery doesn't exist.");
 			return;
 		}
-		if(json.getJSONObject("refineries").getJSONObject(refinery).isNull(name))
+		if(json.getJSONObject("refineries").getJSONObject(refinery).getJSONObject("input").isNull(name))
 		{
 			channel.sendMessage("This input doesn't exist.");
 			return;
 		}
-		JSONObject input = json.getJSONObject("refineries").getJSONObject(refinery).getJSONObject(name);
+		JSONObject input = json.getJSONObject("refineries").getJSONObject(refinery).getJSONObject("input").getJSONObject(name);
 		if(input.isNull(key))
 		{
 			channel.sendMessage("Not a valid field. You can change: output, required, result, level, xp.");

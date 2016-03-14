@@ -25,7 +25,7 @@ public class Floor {
             +"\"events\": {"
             +    "rock:{"
             +        "\"max\":5,"
-            +        "\"current\":5,"
+            +        "\"ready\":5,"
             +        "\"required_level\": 1,"
             +        "\"xp\": 3,"
             +        "\"refresh_time\": 60,"
