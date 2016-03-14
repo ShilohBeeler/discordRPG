@@ -146,7 +146,17 @@ public class DiscordRPG {
 			w.write("{\"events\":{}}");
 			w.flush();
 			w.close();
-			Store.initialize();
+			REvents.initialize();
+		}
+		File n = new File(System.getProperty("user.home")+"/discordRPG/refineries.json");
+		if(!n.exists())
+		{
+			n.createNewFile();
+			FileWriter w = new FileWriter(System.getProperty("user.home")+"/discordRPG/refineries.json");
+			w.write("{\"events\":{}}");
+			w.flush();
+			w.close();
+			Refinery.initialize();
 		}
 		}
 	}
