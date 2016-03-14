@@ -81,7 +81,7 @@ public class REvents {
 			current--;
 			fevent.remove("current");
 			fevent.put("current", current);
-			FileWriter r = new FileWriter(file);
+			FileWriter r = new FileWriter(Floor.file);
 			r.write(json2.toString(3));
 			r.flush();
 			r.close();

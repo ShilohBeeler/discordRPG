@@ -54,7 +54,7 @@ public class DiscordRPG {
 			Monster.defend(user, channel);
 		}else if(eventType.endsWith("RefreshEvent"))
 		{
-			REvents.doEvent(eventType, user, channel);
+			REvents.refreshEvent(eventType, channel);
 		}else if(eventType.equalsIgnoreCase("WeatherTestEvent"))
 		{
 			Ambient.weatherTest(channel);
