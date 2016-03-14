@@ -52,12 +52,9 @@ public class DiscordRPG {
 		if(eventType.equalsIgnoreCase("defend"))
 		{
 			Monster.defend(user, channel);
-		}else if(eventType.equalsIgnoreCase("RockRefreshEvent"))
+		}else if(eventType.endsWith("RefreshEvent"))
 		{
-			Floor.addRock(channel);
-		}else if(eventType.equalsIgnoreCase("TreeRefreshEvent"))
-		{
-			Floor.addTree(channel);
+			REvents.doEvent(eventType, user, channel);
 		}else if(eventType.equalsIgnoreCase("WeatherTestEvent"))
 		{
 			Ambient.weatherTest(channel);
@@ -137,6 +134,16 @@ public class DiscordRPG {
 			l.createNewFile();
 			FileWriter w = new FileWriter(System.getProperty("user.home")+"/discordRPG/trades.json");
 			w.write("{\"trades\":{}}");
+			w.flush();
+			w.close();
+			Store.initialize();
+		}
+		File m = new File(System.getProperty("user.home")+"/discordRPG/events.json");
+		if(!m.exists())
+		{
+			m.createNewFile();
+			FileWriter w = new FileWriter(System.getProperty("user.home")+"/discordRPG/events.json");
+			w.write("{\"events\":{}}");
 			w.flush();
 			w.close();
 			Store.initialize();

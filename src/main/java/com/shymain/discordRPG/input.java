@@ -228,26 +228,7 @@ public class Input {
 			return;
 		}else if(command.equalsIgnoreCase(".mine"))
 		{
-			String holding = Player.getSlot(event.getMessage().getAuthor(), event.getMessage().getChannel(), "hand");
-			boolean can_mine = Item.getBool(holding, "can_mine");
-			if(!can_mine)
-			{
-				event.getMessage().getChannel().sendMessage("You don't have a pickaxe equipped.");
-				return;
-			}
-			Floor.mineRock(event.getMessage().getAuthor(), event.getMessage().getChannel());
-			return;
-		}else if(command.equalsIgnoreCase(".chop") || command.equalsIgnoreCase(".cut"))
-		{
-			String holding = Player.getSlot(event.getMessage().getAuthor(), event.getMessage().getChannel(), "hand");
-			boolean can_chop = Item.getBool(holding, "can_chop");
-			if(!can_chop)
-			{
-				event.getMessage().getChannel().sendMessage("You don't have an axe equipped.");
-				return;
-			}
-			Floor.cutTree(event.getMessage().getAuthor(), event.getMessage().getChannel());
-			return;
+			
 		}else if(command.equalsIgnoreCase(".trade"))
 		{
 			if(arguments.length<1)

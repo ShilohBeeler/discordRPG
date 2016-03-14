@@ -22,26 +22,24 @@ public class Floor {
 	public static void initialize() throws JSONException, IOException
 	{
 		String template = "{"
-            + "\"events\":{"
-            + "\"Rock\":{"
-            + "\"ready\":3,"
-            + "\"max\":3,"
-            + "\"xp\":3,"
-            + "\"refresh_time\": 60,"
-            + "\"drops\":\"iron_ore\""
-            + "},"
-            + "\"Tree\":{"
-            + "\"ready\":10,"
-            + "\"max\":10,"
-            + "\"xp\":2,"
-            + "\"refresh_time\": 60,"
-            + "\"drops\":\"oak_wood\""
-            + "}"            
-            + "}"
-    		+ "}";
+            +"\"events\": {"
+            +    "rock:{"
+            +        "\"max\":5,"
+            +        "\"current\":5,"
+            +        "\"required_level\": 1,"
+            +        "\"xp\": 3,"
+            +        "\"refresh_time\": 60,"
+            +        "\"drops\": \"iron_ore\""
+            +    "}"
+            +"},"
+            +"\"refineries\":{"
+            +    "furnace: true,"
+            +    "lumber_mill:false"
+            +"}"
+            +"}";
 		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
 		JSONObject floor = new JSONObject(template);
-		json.getJSONObject("floors").put("149548522058809344", floor);
+		json.getJSONObject("floors").put("157558660732682241", floor);
 		FileWriter r = new FileWriter(file);
 		r.write(json.toString(3));
 		r.flush();

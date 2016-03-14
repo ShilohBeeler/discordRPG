@@ -17,9 +17,23 @@ public class REvents {
 	
 	public static String file = System.getProperty("user.home") + "/discordRPG/events.json";
 
-	public static void initialize()
+	public static void initialize() throws JSONException, IOException
 	{
-		
+		String template = "{"
+		+ "\"skill\": \"mining\","
+        + "\"attempt_message\":\"You swing your pick at the rock.\","
+        + "\"failure_message\":\"But there was no ore left.\","
+        + "\"refresh_message\":\"A vein appears in one of the rocks.\","
+        + "\"required_message\":\"You don't have a pickaxe equipped!\","
+        + "\"requires\":\"can_mine\""
+    	+ "}";
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		JSONObject event = new JSONObject(template);
+		json.getJSONObject("events").put("rock", event);
+		FileWriter r = new FileWriter(file);
+		r.write(json.toString(3));
+		r.flush();
+		r.close();
 	}
 	
 	public static void doEvent(String event, IUser user, IChannel channel) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
