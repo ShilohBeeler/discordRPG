@@ -107,7 +107,7 @@ public class REvents {
 		JSONObject json2 = new JSONObject(DiscordRPG.readFile(Floor.file));
 		JSONObject fevent = json2.getJSONObject("floors").getJSONObject(channel.getID()).getJSONObject("events").getJSONObject(event);
 		fevent.increment("ready");
-		FileWriter r = new FileWriter(file);
+		FileWriter r = new FileWriter(Floor.file);
 		r.write(json2.toString(3));
 		r.flush();
 		r.close();

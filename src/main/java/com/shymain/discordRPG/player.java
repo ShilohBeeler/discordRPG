@@ -152,6 +152,15 @@ public class Player {
 	{
 		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
 		JSONObject player = json.getJSONObject("players").getJSONObject(user.getID());
+		if(player.getJSONObject("stats").isNull(skill))
+		{
+			JSONObject template = new JSONObject("{xp:0, level:1}");
+			player.getJSONObject("stats").put(skill, template);
+			FileWriter r = new FileWriter(file);
+			r.write(json.toString(3));
+			r.flush();
+			r.close();
+		}
 		JSONObject thisSkill = player.getJSONObject("stats").getJSONObject(skill);
 		int level = thisSkill.getInt("level");
 		int exp = thisSkill.getInt("xp");

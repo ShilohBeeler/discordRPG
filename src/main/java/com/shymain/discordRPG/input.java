@@ -437,16 +437,7 @@ public class Input {
 					Refinery.inputDelete(arguments[2], item, event.getMessage().getChannel());
 				}else if(arguments[1].equalsIgnoreCase("edit"))
 				{
-					String[] itemBreak = item.split(" ");
-					if(itemBreak.length < 3)
-					{
-						event.getMessage().getChannel().sendMessage("refinery input edit [refinery] [input] [key] [value]");
-						return;
-					}
-					String value = itemBreak[itemBreak.length-1];
-					String key = itemBreak[itemBreak.length-2];
-					item.replace("_"+key+"_"+value, "");
-					Refinery.inputEdit(arguments[2], item, key, value, event.getMessage().getChannel());
+					Refinery.inputEdit(arguments[2], arguments[3], arguments[4], arguments[5], event.getMessage().getChannel());
 				}
 			}
 		}

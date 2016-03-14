@@ -57,7 +57,7 @@ public class Refinery {
 			return;
 		}
 		JSONObject json2 = new JSONObject(DiscordRPG.readFile(Floor.file));
-		if(!json2.getJSONObject("floors").getJSONObject(channel.getID()).getJSONObject("refineries").getBoolean(refinery))
+		if(json2.getJSONObject("floors").getJSONObject(channel.getID()).getJSONObject("refineries").isNull(refinery))
 		{
 			channel.sendMessage("You can't do that here!");
 			return;
@@ -74,13 +74,14 @@ public class Refinery {
 			channel.sendMessage("You don't have that item!");
 			return;
 		}
-		if(player.getJSONObject("inventory").getInt(item)<refineries.getJSONObject(refinery).getInt("required"))
+		if(player.getJSONObject("inventory").getInt(item)<refineries.getJSONObject(refinery).getJSONObject(item).getInt("required"))
 		{
-			channel.sendMessage("You need " + refineries.getJSONObject(refinery).getInt("required") + item + " to refine them.");
+			channel.sendMessage("You need " + refineries.getJSONObject(refinery).getJSONObject(item).getInt("required") + item + " to refine them.");
 		}
-		Player.inventoryRemove(user, item, refineries.getJSONObject(refinery).getInt("required"));
-		Player.inventoryAdd(user, refineries.getJSONObject(refinery).getJSONObject(item).getString("output"), refineries.getJSONObject(refinery).getInt("result"));
-		channel.sendMessage("You refine " + refineries.getJSONObject(refinery).getInt("required") + " " + item +", and retrieve "+ refineries.getJSONObject(refinery).getInt("result") + " "+ refineries.getJSONObject(refinery).getString("output") + ".");
+		Player.inventoryRemove(user, item, refineries.getJSONObject(refinery).getJSONObject(item).getInt("required"));
+		Player.inventoryAdd(user, refineries.getJSONObject(refinery).getJSONObject(item).getString("output"), refineries.getJSONObject(refinery).getJSONObject(item).getInt("result"));
+		Player.addXP(user, channel, refineries.getJSONObject(refinery).getString("skill"), refineries.getJSONObject(refinery).getJSONObject(item).getInt("xp"));
+		channel.sendMessage("You refine " + refineries.getJSONObject(refinery).getJSONObject(item).getInt("required") + " " + item +", and retrieve "+ refineries.getJSONObject(refinery).getJSONObject(item).getInt("result") + " "+ refineries.getJSONObject(refinery).getJSONObject(item).getString("output") + ".");
 	}
 	
 	public static void create(String name, IChannel channel) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
