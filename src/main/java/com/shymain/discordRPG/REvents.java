@@ -34,12 +34,12 @@ public class REvents {
 		}
 		JSONObject revent = events.getJSONObject(event);
 		JSONObject json2 = new JSONObject(DiscordRPG.readFile(Floor.file));
-		if(json2.getJSONObject("events").isNull(event))
+		if(json2.getJSONObject("floors").getJSONObject(channel.getID()).getJSONObject("events").isNull(event))
 		{
 			channel.sendMessage("You're in the wrong place to do this.");
 			return;
 		}
-		JSONObject fevent = json2.getJSONObject("events").getJSONObject(event);
+		JSONObject fevent = json2.getJSONObject("floors").getJSONObject(channel.getID()).getJSONObject("events").getJSONObject(event);
 		if(!revent.getString("requires").equalsIgnoreCase("none"))
 		{
 			String holding = Player.getSlot(user, channel, "hand");
@@ -59,42 +59,47 @@ public class REvents {
 			return;
 		}
 		int dropNo = 1;
-		if(rock.getInt("ready")==0)
+		if(fevent.getInt("current")==0)
 		{
-			channel.sendMessage("You swing your pick at the rock.\nBut there was no ore left.");
+			channel.sendMessage(revent.getString("attempt_message")+"\n"+revent.getString("failure_message"));
 		}else{
-			int ready = rock.getInt("ready");
-			ready--;
-			rock.remove("ready");
-			rock.put("ready", ready);
+			int current = fevent.getInt("current");
+			current--;
+			fevent.remove("current");
+			fevent.put("current", current);
 			FileWriter r = new FileWriter(file);
-			r.write(json.toString(3));
+			r.write(json2.toString(3));
 			r.flush();
 			r.close();
-			int skill = Player.getSkill(user, "mining");
+			int skill = Player.getSkill(user, skill_type);
+			skill -= fevent.getInt("required_level");
+			skill++;
 			Random ran = new Random();
 			int factor = ran.nextInt(skill);
 			factor /= 5;
 			dropNo += factor;
-			Player.inventoryAdd(user, rock.getString("drops"), dropNo);
-			Event rockRefresh = new Event("RockRefreshEvent", user, channel);
-			DiscordRPG.timedEvents.put(rockRefresh, rock.getInt("refresh_time"));
-			channel.sendMessage("You swing your pick at the rock.\nYou get " + dropNo + " " + rock.getString("drops") + "!");
-			Player.addXP(user, channel, "mining", rock.getInt("xp"));
+			Player.inventoryAdd(user, fevent.getString("drops"), dropNo);
+			Event eventRefresh = new Event(event+"RefreshEvent", user, channel);
+			DiscordRPG.timedEvents.put(eventRefresh, fevent.getInt("refresh_time"));
+			channel.sendMessage(revent.getString("attempt_message") + "\nYou get " + dropNo + " " + fevent.getString("drops") + "!");
+			Player.addXP(user, channel, "mining", fevent.getInt("xp"));
 		}
 	}
 	
-	public static void refreshEvent(IChannel channel) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
+	public static void refreshEvent(String event, IChannel channel) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
 	{
+		event = event.replace("RefreshEvent", "");
 		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
-		JSONObject rock = json.getJSONObject("floors").getJSONObject(channel.getID()).getJSONObject("events").getJSONObject("Rock");
-		rock.increment("ready");
+		JSONObject json2 = new JSONObject(DiscordRPG.readFile(Floor.file));
+		JSONObject fevent = json2.getJSONObject("floors").getJSONObject(channel.getID()).getJSONObject("events").getJSONObject(event);
+		fevent.increment("ready");
 		FileWriter r = new FileWriter(file);
-		r.write(json.toString(3));
+		r.write(json2.toString(3));
 		r.flush();
 		r.close();
-		channel.sendMessage("A vein reappears in one of the rocks.\n"
-				+ rock.getInt("ready") + " of " + rock.getInt("max") + " rocks now available.");
+		JSONObject revent = json.getJSONObject("events").getJSONObject(event);
+		channel.sendMessage(revent.getString("refresh_message")+"\n"
+				+ fevent.getInt("ready") + " of " + fevent.getInt("max") + " now available.");
 		
 	}
 }
