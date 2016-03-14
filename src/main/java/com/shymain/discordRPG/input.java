@@ -369,6 +369,34 @@ public class Input {
 			allArgs = allArgs.replace(" ", "_");
 			IUser thisUser = event.getMessage().getChannel().getGuild().getUserByID(id);
 			Item.give(thisUser, event.getMessage().getChannel(), allArgs);
+		}if(command.equalsIgnoreCase("command"))
+		{
+			if(arguments==null || arguments.length<2)
+			{
+				event.getMessage().getChannel().sendMessage(".command delete [name] or .command create [name].");
+				return;
+			}
+			if(arguments[0].equalsIgnoreCase("create"))
+			{
+				Commands.create(arguments[1], event.getMessage().getChannel());
+			}else if(arguments[0].equalsIgnoreCase("delete"))
+			{
+				Commands.delete(arguments[1], event.getMessage().getChannel());
+			}else if(arguments[0].equalsIgnoreCase("tie"))
+			{
+				if(arguments.length!=4)
+				{
+					event.getMessage().getChannel().sendMessage(".command tie [event | refinery] [command] [e/r name]");
+					return;
+				}
+				if(arguments[1].equalsIgnoreCase("refinery"))
+				{
+					Commands.tieRefinery(event.getMessage().getChannel(), arguments[2], arguments[3]);
+				}else if(arguments[1].equalsIgnoreCase("event"))
+				{
+					Commands.tieEvent(event.getMessage().getChannel(), arguments[2], arguments[3]);
+				}
+			}
 		}
 	}
 	

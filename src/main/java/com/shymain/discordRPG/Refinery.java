@@ -82,5 +82,40 @@ public class Refinery {
 		channel.sendMessage("You refine " + refineries.getJSONObject(refinery).getInt("required") + " " + item +", and retrieve "+ refineries.getJSONObject(refinery).getInt("result") + " "+ refineries.getJSONObject(refinery).getString("output") + ".");
 	}
 	
+	public static void create(String name, IChannel channel) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
+	{
+		String template = "{"
+        +    "skill:\"none\","
+        +    "input:{}"
+        +	 "}";
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		if(json.getJSONObject("refineries").has(name))
+		{
+			channel.sendMessage("This command already exists.");
+			return;
+		}
+		JSONObject refinery = new JSONObject(template);
+		json.getJSONObject("refineries").put(name, refinery);
+		FileWriter r = new FileWriter(file);
+		r.write(json.toString(3));
+		r.flush();
+		r.close();
+		channel.sendMessage("Command added!");
+	}
 	
+	public static void delete(String name, IChannel channel) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
+	{
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		if(json.getJSONObject("commands").isNull(name))
+		{
+			channel.sendMessage("This command doesn't exist.");
+			return;
+		}
+		json.getJSONObject("commands").remove(name);
+		FileWriter r = new FileWriter(file);
+		r.write(json.toString(3));
+		r.flush();
+		r.close();
+		channel.sendMessage("Command deleted!");
+	}
 }
