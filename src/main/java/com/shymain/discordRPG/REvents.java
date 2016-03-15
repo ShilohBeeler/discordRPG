@@ -73,14 +73,14 @@ public class REvents {
 			return;
 		}
 		int dropNo = 1;
-		if(fevent.getInt("current")==0)
+		if(fevent.getInt("ready")==0)
 		{
 			channel.sendMessage(revent.getString("attempt_message")+"\n"+revent.getString("failure_message"));
 		}else{
-			int current = fevent.getInt("current");
-			current--;
-			fevent.remove("current");
-			fevent.put("current", current);
+			int ready = fevent.getInt("ready");
+			ready--;
+			fevent.remove("ready");
+			fevent.put("ready", ready);
 			FileWriter r = new FileWriter(Floor.file);
 			r.write(json2.toString(3));
 			r.flush();

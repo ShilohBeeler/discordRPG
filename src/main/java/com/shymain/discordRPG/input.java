@@ -440,6 +440,51 @@ public class Input {
 					Refinery.inputEdit(arguments[2], arguments[3], arguments[4], arguments[5], event.getMessage().getChannel());
 				}
 			}
+		}else if(command.equalsIgnoreCase("floor"))
+		{
+			if(arguments==null || arguments.length < 2)
+			{
+				event.getMessage().getChannel().sendMessage("Please add arguments!");
+				return;
+			}
+			if(arguments[0].equalsIgnoreCase("create"))
+			{
+				Floor.createFloor(arguments[1], event.getMessage().getChannel());
+			}else if(arguments[0].equalsIgnoreCase("delete"))
+			{
+				Floor.deleteFloor(arguments[1], event.getMessage().getChannel());
+			}else if(arguments[0].equalsIgnoreCase("refinery"))
+			{
+				if(arguments.length!=4)
+				{
+					event.getMessage().getChannel().sendMessage(".floor refinery [add | delete] [refinery] [floor]");
+					return;
+				}
+				if(arguments[1].equalsIgnoreCase("add"))
+				{
+					Floor.addRefinery(arguments[2], arguments[3], event.getMessage().getChannel());
+				}else if(arguments[1].equalsIgnoreCase("delete"))
+				{
+					Floor.deleteRefinery(arguments[2], arguments[3], event.getMessage().getChannel());
+				}
+			}else if(arguments[0].equalsIgnoreCase("event"))
+			{
+				if(arguments.length<4)
+				{
+					event.getMessage().getChannel().sendMessage("Please add correct parameters.");
+					return;
+				}
+				if(arguments[1].equalsIgnoreCase("add"))
+				{
+					Floor.eventCreate(arguments[3], arguments[2], event.getMessage().getChannel());
+				}else if(arguments[1].equalsIgnoreCase("delete"))
+				{
+					Floor.eventDelete(arguments[3], arguments[2], event.getMessage().getChannel());
+				}else if(arguments[1].equalsIgnoreCase("edit"))
+				{
+					Floor.eventEdit(arguments[3], arguments[2], arguments[4], arguments[5], event.getMessage().getChannel());
+				}
+			}
 		}
 	}
 	
