@@ -116,4 +116,67 @@ public class REvents {
 				+ fevent.getInt("ready") + " of " + fevent.getInt("max") + " now available.");
 		
 	}
+
+	public static void createEvent(String event, IChannel channel) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
+	{
+		String template = "{"
+				+ "\"skill\": \"mining\","
+		        + "\"attempt_message\":\"Test Message 1.\","
+		        + "\"failure_message\":\"Test Message 2.\","
+		        + "\"refresh_message\":\"Test Message 3.\","
+		        + "\"required_message\":\"Test Message 4.\","
+		        + "\"requires\":\"none\""
+		    	+ "}";
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		if(json.getJSONObject("events").has(event))
+		{
+			channel.sendMessage("This event already exists.");
+			return;
+		}
+		JSONObject newevent = new JSONObject(template);
+		json.getJSONObject("events").put(event, newevent);
+		FileWriter r = new FileWriter(file);
+		r.write(json.toString(3));
+		r.flush();
+		r.close();
+		channel.sendMessage("New event created!");
+	}
+	
+	public static void deleteEvent(String event, IChannel channel) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
+	{
+		
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		if(json.getJSONObject("events").isNull(event))
+		{
+			channel.sendMessage("This event doesn't exist.");
+			return;
+		}
+		json.getJSONObject("events").remove(event);
+		FileWriter r = new FileWriter(file);
+		r.write(json.toString(3));
+		r.flush();
+		r.close();
+		channel.sendMessage("Event deleted!");
+	}
+	
+	public static void editEvent(String event, String key, String value, IChannel channel) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
+	{
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		if(json.getJSONObject("events").isNull(event))
+		{
+			channel.sendMessage("This event doesn't exist.");
+			return;
+		}
+		if(json.getJSONObject("events").getJSONObject(event).isNull(key))
+		{
+			channel.sendMessage("This is not a valid key.");
+		}
+		json.getJSONObject("events").getJSONObject(event).remove(key);
+		json.getJSONObject("events").getJSONObject(event).put(key, value);
+		FileWriter r = new FileWriter(file);
+		r.write(json.toString(3));
+		r.flush();
+		r.close();
+		channel.sendMessage("Event edited.");
+	}
 }

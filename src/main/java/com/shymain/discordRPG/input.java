@@ -485,6 +485,29 @@ public class Input {
 					Floor.eventEdit(arguments[3], arguments[2], arguments[4], arguments[5], event.getMessage().getChannel());
 				}
 			}
+		}else if(command.equalsIgnoreCase("event"))
+		{
+			if(arguments==null || arguments.length < 2)
+			{
+				event.getMessage().getChannel().sendMessage("Please add arguments!");
+				return;
+			}
+			if(arguments[0].equalsIgnoreCase("create"))
+			{
+				REvents.createEvent(arguments[1], event.getMessage().getChannel());
+			}else if(arguments[0].equalsIgnoreCase("delete"))
+			{
+				REvents.deleteEvent(arguments[1], event.getMessage().getChannel());
+			}else if(arguments[0].equalsIgnoreCase("edit"))
+			{
+				if(arguments.length<4)
+				{
+					event.getMessage().getChannel().sendMessage(".event edit [event] [key] [value]");
+					return;
+				}
+				String[] args = allArguments.split(" ", 4);
+				REvents.editEvent(args[1], args[2], args[3], event.getMessage().getChannel());
+			}
 		}
 	}
 	
