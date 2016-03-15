@@ -72,10 +72,10 @@ Note: "." is the default prefix, but the prefix can be changed by the server adm
 |`none`|these are server specific, and can only be found through .help custom on each server|
 |**Admin Commands**|
 |`.floor create [id]`|initializes a new floor for the channel with the id [id]|
-|`.floor delete [id]|removes the floor and all data for the channel with the id [id]|
+|`.floor delete [id]`|removes the floor and all data for the channel with the id [id]|
 |`.floor refinery add [refinery] [id]`|adds the refinery [refinery] to the floor [id]|
 |`.floor refinery delete [refinery] [id]`|removes the refinery [refinery] from the floor [id]|
-|`.floor event add [event] [id]|adds the event [event] to the floor [id]|
+|`.floor event add [event] [id]`|adds the event [event] to the floor [id]|
 |`.floor event delete [event] [id]`|removes the event [event] from the floor [id]|
 |`.floor event edit [event] [id] [key] [value]`|changes [key] to have [value] for the [event] on floor [id]|
 |`.event create [name]`|creates a new event [name]|
