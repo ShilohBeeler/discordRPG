@@ -62,4 +62,26 @@ public class Floor {
 		return newEncounter;
 	}
 	
+	public static void addRefinery(String refinery, IChannel channel) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
+	{
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		JSONObject floor = json.getJSONObject(channel.getID());
+		if(floor.getJSONObject("refineries").has(refinery))
+		{
+			channel.sendMessage("This floor already has this refinery!");
+			return;
+		}
+		JSONObject json2 = new JSONObject(DiscordRPG.readFile(Refinery.file));
+		if(json2.getJSONObject("refineries").isNull(refinery))
+		{
+			channel.sendMessage("That refinery does not exist!");
+			return;
+		}
+		floor.getJSONObject("refineries").put(refinery, true);
+		FileWriter r = new FileWriter(DiscordRPG.readFile(file));
+		r.write(json.toString(3));
+		r.flush();
+		r.close();
+	}
+	
 }
