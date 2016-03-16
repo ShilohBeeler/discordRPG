@@ -2,6 +2,7 @@ package com.shymain.discordRPG;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Random;
 
 import org.json.JSONException;
@@ -156,6 +157,18 @@ public class REvents {
 		r.write(json.toString(3));
 		r.flush();
 		r.close();
+		JSONObject json2 = new JSONObject(DiscordRPG.readFile(Floor.file));
+		JSONObject floors = json2.getJSONObject("floors");
+		Iterator<?> iter = floors.keys();
+		while(iter.hasNext())
+		{
+			String key = (String) iter.next();
+			floors.getJSONObject(key).getJSONObject("events").remove(event);
+		}
+		FileWriter w = new FileWriter(Floor.file);
+		w.write(json2.toString(3));
+		w.flush();
+		w.close();
 		channel.sendMessage("Event deleted!");
 	}
 	
