@@ -47,7 +47,7 @@ public class Input {
 		else if(command.equalsIgnoreCase("info")|| command.equalsIgnoreCase("about"))
 		{
 			event.getMessage().getChannel().sendMessage("*discordRPG* bot programmed by **Shymain**!\n"
-					+ "Version: 0.2\n"
+					+ "Version: 0.8\n"
 					+ "Fork me on GitHub! https://github.com/Shymain/discordRPG");
 			return;
 		}	
