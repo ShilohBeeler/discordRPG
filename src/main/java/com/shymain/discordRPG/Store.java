@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import sx.blah.discord.api.DiscordException;
 import sx.blah.discord.api.MissingPermissionsException;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
+import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.util.HTTP429Exception;
 
 public class Store {
@@ -131,4 +132,46 @@ public class Store {
 		}
 		event.getMessage().getChannel().sendMessage("That " + item + " is worth about... let's say, " + Integer.toString(value) + " coins apiece.");
 	}
+
+	public static void addRank(IChannel channel, String rank) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
+	{
+		String template = "{"
+				+ "shop:{"
+	            + "\"health_potion\":10,"
+	            + "\"iron_pickaxe\":100"
+	            + "},"
+	            + "monsters:["
+	            + "\"Gnome\""
+	            + "]"
+	            + "}";
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		JSONObject newrank = new JSONObject(template);
+		if(json.getJSONObject("ranks").has(rank))
+		{
+			channel.sendMessage("This rank already exists!");
+			return;
+		}
+		json.getJSONObject("ranks").put(rank, newrank);
+		FileWriter r = new FileWriter(file);
+		r.write(json.toString(3));
+		r.flush();
+		r.close();
+	}
+	
+	public static void addShop(IChannel channel, String rank, String item, String price) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
+	{
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		if(json.getJSONObject("ranks").isNull(rank))
+		{
+			channel.sendMessage("This rank does not exist.");
+			return;
+		}
+		
+	}
+	
+	public static void removeShop(IChannel channel, String rank, String item)
+	{
+		
+	}
+	
 }
