@@ -508,6 +508,37 @@ public class Input {
 				String[] args = allArguments.split(" ", 4);
 				REvents.editEvent(args[1], args[2], args[3], event.getMessage().getChannel());
 			}
+		}else if(command.equalsIgnoreCase("rank"))
+		{
+            if(arguments.length<2)
+            {
+                event.getMessage().getChannel().sendMessage("Add arguments.");
+                return;
+            }
+            if(arguments[0].equalsIgnoreCase("create"))
+            {
+                Store.addRank(event.getMessage().getChannel(), arguments[1]);
+            }else if(arguments[0].equalsIgnoreCase("edit"))
+            {
+                if(arguments[2].equalsIgnoreCase("shop"))
+                {
+                    if(arguments[3].equalsIgnoreCase("add"))
+                    {
+                        Store.addShop(event.getMessage().getChannel(), arguments[1], arguments[4], arguments[5]);
+                    }else if(arguments[3].equalsIgnoreCase("remove")) {
+                        Store.removeShop(event.getMessage().getChannel(), arguments[1], arguments[4]);
+                    }
+                }else if(arguments[2].equalsIgnoreCase("monsters"))
+                {
+                    if(arguments[3].equalsIgnoreCase("add"))
+                    {
+                        Store.addMonster(event.getMessage().getChannel(), arguments[1], arguments[4]);
+                    }else if(arguments[3].equalsIgnoreCase("remove"))
+                    {
+                        Store.removeMonster(event.getMessage().getChannel(), arguments[1], arguments[4]);
+                    }
+                }
+            }
 		}
 	}
 	
