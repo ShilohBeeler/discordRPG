@@ -4,6 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -166,12 +167,87 @@ public class Store {
 			channel.sendMessage("This rank does not exist.");
 			return;
 		}
-		
+		JSONObject myrank = json.getJSONObject("ranks").getJSONObject(rank);
+		if(myrank.getJSONObject("shop").has(item))
+		{
+			myrank.getJSONObject("shop").remove(item);
+		}
+		myrank.getJSONObject("shop").put(item, Integer.parseInt(price));
+		FileWriter r = new FileWriter(file);
+		r.write(json.toString(3));
+		r.flush();
+		r.close();
+		channel.sendMessage("Item added!");
 	}
 	
-	public static void removeShop(IChannel channel, String rank, String item)
+	public static void removeShop(IChannel channel, String rank, String item) throws MissingPermissionsException, HTTP429Exception, DiscordException, JSONException, IOException
 	{
-		
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		if(json.getJSONObject("ranks").isNull(rank))
+		{
+			channel.sendMessage("This rank does not exist.");
+			return;
+		}
+		json.getJSONObject("ranks").getJSONObject(rank).getJSONObject("shop").remove(item);
+		FileWriter r = new FileWriter(file);
+		r.write(json.toString(3));
+		r.flush();
+		r.close();
+		channel.sendMessage("Item deleted!");
 	}
 	
+	public static void addMonster(IChannel channel, String rank, String monster) throws JSONException, IOException, MissingPermissionsException, HTTP429Exception, DiscordException
+	{
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		if(json.getJSONObject("ranks").isNull(rank))
+		{
+			channel.sendMessage("This rank does not exist.");
+			return;
+		}
+		JSONObject myrank = json.getJSONObject("ranks").getJSONObject(rank);
+		JSONArray array = myrank.getJSONArray("monsters");
+		for(int i = 0; i< array.length(); i++)
+		{
+			String monstah = (String) array.get(i);
+			if(monstah.equalsIgnoreCase(monster))
+			{
+				channel.sendMessage("Monster already in this rank.");
+				return;
+			}
+		}
+		array.put(monster);
+		FileWriter r = new FileWriter(file);
+		r.write(json.toString(3));
+		r.flush();
+		r.close();
+		channel.sendMessage("Monster added!");
+	}
+	
+	public static void removeMonster(IChannel channel, String rank, String monster) throws MissingPermissionsException, HTTP429Exception, DiscordException, JSONException, IOException
+	{
+		JSONObject json = new JSONObject(DiscordRPG.readFile(file));
+		if(json.getJSONObject("ranks").isNull(rank))
+		{
+			channel.sendMessage("This rank does not exist.");
+			return;
+		}
+		JSONObject myrank = json.getJSONObject("ranks").getJSONObject(rank);
+		JSONArray array = myrank.getJSONArray("monsters");
+		for(int i = 0; i< array.length(); i++)
+		{
+			String monstah = (String) array.get(i);
+			if(monstah.equalsIgnoreCase(monster))
+			{
+				array.remove(i);
+				channel.sendMessage("Monster deleted!");
+				FileWriter r = new FileWriter(file);
+				r.write(json.toString(3));
+				r.flush();
+				r.close();
+				return;
+			}
+		}
+		
+		
+	}
 }
