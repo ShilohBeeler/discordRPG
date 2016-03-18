@@ -1,5 +1,6 @@
 package com.shymain.discordRPG;
 
+import java.io.FileWriter;
 import java.io.IOException;
 
 import org.apache.commons.lang3.StringUtils;
@@ -40,6 +41,48 @@ public class Input {
 		}
 		item = allArguments;
 		item = item.replaceAll(" ", "_");
+
+        if(!Config.isSetup())
+        {
+            if(!json2.getJSONObject("config").getString("shop").equalsIgnoreCase("") && !json2.getJSONObject("config").getString("admin").equalsIgnoreCase(""))
+            {
+                json2.getJSONObject("config").remove("setup");
+                json2.getJSONObject("config").put("setup", true);
+                FileWriter r = new FileWriter(Config.file);
+                r.write(json2.toString(3));
+                r.flush();
+                r.close();
+                return;
+            }
+        }
+
+        if(command.equalsIgnoreCase("setup"))
+        {
+            event.getMessage().getChannel().sendMessage("You have begun to set up! Please enter .setshop in a shop channel, " +
+                    "and .setadmin in an admin channel that only people who can manage the game should be able to see!");
+            return;
+        }else if(command.equalsIgnoreCase("setshop"))
+        {
+            Config.setShop(event.getMessage().getChannel());
+            event.getMessage().getChannel().sendMessage("You have set the shop channel!");
+            return;
+        }else if(command.equalsIgnoreCase("setadmin"))
+        {
+            Config.setAdmin(event.getMessage().getChannel());
+            event.getMessage().getChannel().sendMessage("You have set the admin channel!");
+            return;
+        }else if(command.equalsIgnoreCase("setprefix"))
+        {
+            Config.setPrefix(arguments[0]);
+            event.getMessage().getChannel().sendMessage("You have set a new prefix!");
+            return;
+        }
+
+        if(!Config.isSetup())
+        {
+            return;
+        }
+
 		if(command.equalsIgnoreCase("help")){
 			help(event);
 			return;
@@ -72,11 +115,11 @@ public class Input {
 		}else if(command.equalsIgnoreCase("skills") || command.equalsIgnoreCase("stats")){
 			Player.getSkills(event.getMessage().getAuthor(), event.getMessage().getChannel());
 			return;
-		}else if(event.getMessage().getChannel().getID().equalsIgnoreCase("157558822842531840"))
+		}else if(event.getMessage().getChannel().getID().equalsIgnoreCase(Config.getShop()))
 		{
 			shop(event);
 			return;
-		}else if(event.getMessage().getChannel().getID().equalsIgnoreCase("157564348263432192"))
+		}else if(event.getMessage().getChannel().getID().equalsIgnoreCase(Config.getAdmin()))
 		{
 			admin(event);
 			return;
