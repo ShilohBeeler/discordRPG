@@ -16,11 +16,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import sx.blah.discord.api.ClientBuilder;
-import sx.blah.discord.api.DiscordException;
+import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.api.IDiscordClient;
-import sx.blah.discord.api.MissingPermissionsException;
-import sx.blah.discord.handle.EventDispatcher;
-import sx.blah.discord.handle.EventSubscriber;
+import sx.blah.discord.util.MissingPermissionsException;
+import sx.blah.discord.api.EventDispatcher;
+import sx.blah.discord.api.EventSubscriber;
 import sx.blah.discord.handle.impl.events.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.impl.events.UserJoinEvent;
