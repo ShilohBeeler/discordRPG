@@ -1,4 +1,6 @@
 # discordRPG v0.8
+NOTE: THIS IS BLATANTLY OUTDATED AND HASN'T BEEN TOUCHED IN FOREVER. IT WILL NOT WORK WITHOUT A LOT OF FRONT-END CHANGES. PLEASE DON'T ASK ME TO HELP, I DON'T CARE ABOUT THIS PROJECT ANY MORE.
+
 RPG for Discord.
 
 This project is essentially supposed to create a text-based MMORPG-style game (specifically taking inspiration from aspects of Runescape), playable by any and all.
