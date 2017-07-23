@@ -91,4 +91,4 @@ Note: "." is the default prefix, but the prefix can be changed by the server adm
 |`.refinery input edit [name] [item] [key] [value]`|edits the [key] to have the value [value] for the [item] input for the refinery [name]|
 |`.command create [name]`|creates a new command with the name [name]|
 |`.command delete [name]`|deletes the command with the name [name]|
-|`.command tie [refinery | event] [name] [r/e name]`|ties the command [name] to the [event | refinery] with the name [r/e name]|
+|`.command tie [refinery \| event] [name] [r/e name]`|ties the command [name] to the [event | refinery] with the name [r/e name]|
