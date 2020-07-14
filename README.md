@@ -25,7 +25,7 @@ This project is essentially supposed to create a text-based MMORPG-style game (s
 To create a bot which works as an MMORPG host for Discord, and make it easy to fork and customize to your liking both through code and Discord commands!
 
 # Discord Server:
-http://discord.gg/0pn4SBaPr03DR4rk
+discord server has been killed.
 
 # Commands:
 
